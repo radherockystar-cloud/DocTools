@@ -1,7 +1,7 @@
 {
-  "name": "DocTools - Image & PDF Studio",
+  "name": "DocTools",
   "short_name": "DocTools",
-  "description": "Superfast private client-side Image compressor, resizer, PDF tools & OCR suite.",
+  "description": "Superfast Image & PDF Micro Tools",
   "start_url": "/",
   "id": "/",
   "display": "standalone",
@@ -20,12 +20,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ]
 }
