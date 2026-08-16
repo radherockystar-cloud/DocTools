@@ -20,5 +20,12 @@
   <body class="min-h-screen flex flex-col antialiased selection:bg-rose-500 selection:text-white bg-rose-50/30">
     <div id="app" class="min-h-screen flex flex-col"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>
