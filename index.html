@@ -14,23 +14,18 @@
 
     <script type="module" src="/src/main.js"></script>
 
-    <!-- Auto-Update Engine -->
+    <!-- Auto Cache-Killer & Live Sync -->
     <script>
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => caches.delete(name));
+        });
+      }
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then((reg) => {
-            // Check for updates on every app launch
-            reg.update();
-            reg.addEventListener('updatefound', () => {
-              const newWorker = reg.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Naya update milte hi page auto-refresh ho jayega
-                  window.location.reload();
-                }
-              });
-            });
-          });
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (let reg of registrations) {
+            reg.unregister();
+          }
         });
       }
     </script>
