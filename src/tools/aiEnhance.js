@@ -4,14 +4,11 @@ import { createDropzone } from '../components/Dropzone.js';
 import { formatBytes, readFileAsDataURL, readFileAsArrayBuffer } from '../utils/fileHelpers.js';
 import { downloadFile } from '../utils/download.js';
 
-// Setup Robust Worker
+// Safe Worker Configuration
 try {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url
-  ).toString();
-} catch (e) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@legacy/build/pdf.worker.min.js';
+} catch (e) {
+  console.warn('PDF Worker fallback initialized');
 }
 
 export function renderAiEnhance(container, onBack) {
@@ -79,13 +76,7 @@ export function renderAiEnhance(container, onBack) {
     btnProcess.addEventListener('click', async () => {
       try {
         btnProcess.disabled = true;
-        btnProcess.innerHTML = `
-          <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-          </svg>
-          AI Neural Processing... Please wait
-        `;
+        btnProcess.innerHTML = 'AI Neural Processing... Please wait';
 
         if (isPdf) {
           await processPdfWithAi(file, aiResult, btnProcess);
@@ -101,7 +92,6 @@ export function renderAiEnhance(container, onBack) {
     });
   }
 
-  // Single Image AI Pipeline
   async function processImageWithAi(file, aiResult, btnProcess) {
     const base64Data = await readFileAsDataURL(file);
 
@@ -116,13 +106,11 @@ export function renderAiEnhance(container, onBack) {
       throw new Error(data.error || 'Failed to generate enhanced image');
     }
 
-    const enhancedUrl = data.output;
-    renderComparisonView(aiResult, base64Data, enhancedUrl, false, file.name);
+    renderComparisonView(aiResult, base64Data, data.output, false, file.name);
     btnProcess.disabled = false;
     btnProcess.innerHTML = '✨ Enhance Another';
   }
 
-  // Multi-Page PDF AI Pipeline
   async function processPdfWithAi(file, aiResult, btnProcess) {
     const arrayBuffer = await readFileAsArrayBuffer(file);
     const typedarray = new Uint8Array(arrayBuffer);
@@ -150,7 +138,6 @@ export function renderAiEnhance(container, onBack) {
 
       if (i === 1) firstPageOriginal = pageBase64;
 
-      // Enhance Page via AI
       const res = await fetch('/api/enhance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -180,7 +167,6 @@ export function renderAiEnhance(container, onBack) {
     btnProcess.innerHTML = '✨ Enhance Another';
   }
 
-  // Before vs After Preview & Payment Unlock Box
   function renderComparisonView(container, beforeSrc, afterSrc, isPdf, originalName, pdfBlob = null) {
     container.classList.remove('hidden');
     container.innerHTML = `
@@ -208,7 +194,6 @@ export function renderAiEnhance(container, onBack) {
           </div>
         </div>
 
-        <!-- Payment & Unlock Card -->
         <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-xl space-y-3">
           <div class="flex items-center justify-between">
             <div>
