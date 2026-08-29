@@ -1,31 +1,22 @@
-import { jsPDF } from 'jspdf';
-import * as pdfjsLib from 'pdfjs-dist';
 import { createDropzone } from '../components/Dropzone.js';
-import { formatBytes, readFileAsDataURL, readFileAsArrayBuffer } from '../utils/fileHelpers.js';
+import { formatBytes } from '../utils/fileHelpers.js';
 import { downloadFile } from '../utils/download.js';
-
-// Safe Worker Configuration
-try {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@legacy/build/pdf.worker.min.js';
-} catch (e) {
-  console.warn('PDF Worker fallback initialized');
-}
 
 export function renderAiEnhance(container, onBack) {
   container.innerHTML = `
     <div class="max-w-3xl mx-auto px-4 py-8 w-full">
-      <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 mb-6 transition-colors">
+      <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white mb-6 transition-colors">
         ← Back to All Tools
       </button>
 
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm">
         <div class="mb-6">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-2.5 py-1 rounded-md">AI Super Engine</span>
-            <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">₹3 / Enhancement</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 dark:bg-purple-950 dark:text-purple-300 px-2.5 py-1 rounded-md">AI Super Engine</span>
+            <span class="text-xs font-bold text-amber-700 bg-amber-100 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded">₹3 / Enhancement</span>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">AI Photo & Document Clarifier</h1>
-          <p class="text-sm text-slate-500 mt-1">Turn blurry photos, old bills & low-res PDFs into crystal clear HDR quality.</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">AI Photo & Document Clarifier</h1>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Turn blurry photos, old bills & low-res documents into crystal clear HDR quality.</p>
         </div>
 
         <div id="dropzone-area"></div>
@@ -47,19 +38,28 @@ export function renderAiEnhance(container, onBack) {
 
   let currentFile = null;
 
+  function readFileData(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function handleFile(file) {
     currentFile = file;
     const isPdf = file.type === 'application/pdf' || file.name.endsWith('.pdf');
 
     actionArea.classList.remove('hidden');
     actionArea.innerHTML = `
-      <div class="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+      <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
         <div class="w-12 h-12 rounded-xl ${isPdf ? 'bg-rose-100 text-rose-600' : 'bg-purple-100 text-purple-600'} flex items-center justify-center font-bold text-2xl">
           ${isPdf ? '📄' : '🖼️'}
         </div>
         <div class="overflow-hidden">
-          <p class="font-semibold text-slate-800 text-sm truncate">${file.name}</p>
-          <p class="text-xs text-slate-500">Original Size: <span class="font-bold text-slate-700">${formatBytes(file.size)}</span> • Type: <span class="font-bold uppercase text-purple-700">${isPdf ? 'PDF Document' : 'Photo Image'}</span></p>
+          <p class="font-semibold text-slate-800 dark:text-slate-200 text-sm truncate">${file.name}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Original Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Type: <span class="font-bold uppercase text-purple-700 dark:text-purple-400">${isPdf ? 'Document' : 'Photo Image'}</span></p>
         </div>
       </div>
 
@@ -76,13 +76,30 @@ export function renderAiEnhance(container, onBack) {
     btnProcess.addEventListener('click', async () => {
       try {
         btnProcess.disabled = true;
-        btnProcess.innerHTML = 'AI Neural Processing... Please wait';
+        btnProcess.innerHTML = `
+          <svg class="animate-spin h-5 w-5 text-white inline-block mr-2" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          AI Neural Processing... Please wait
+        `;
 
-        if (isPdf) {
-          await processPdfWithAi(file, aiResult, btnProcess);
-        } else {
-          await processImageWithAi(file, aiResult, btnProcess);
+        const base64Data = await readFileData(file);
+
+        const res = await fetch('/api/enhance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data, scale: 2, face_enhance: true })
+        });
+
+        const data = await res.json();
+        if (!data.success || !data.output) {
+          throw new Error(data.error || 'Failed to enhance image');
         }
+
+        renderComparisonView(aiResult, base64Data, data.output, file.name);
+        btnProcess.disabled = false;
+        btnProcess.innerHTML = '✨ Enhance Another';
 
       } catch (err) {
         alert('AI Enhancement Error: ' + err.message);
@@ -92,82 +109,7 @@ export function renderAiEnhance(container, onBack) {
     });
   }
 
-  async function processImageWithAi(file, aiResult, btnProcess) {
-    const base64Data = await readFileAsDataURL(file);
-
-    const res = await fetch('/api/enhance', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: base64Data, scale: 2, face_enhance: true })
-    });
-
-    const data = await res.json();
-    if (!data.success || !data.output) {
-      throw new Error(data.error || 'Failed to generate enhanced image');
-    }
-
-    renderComparisonView(aiResult, base64Data, data.output, false, file.name);
-    btnProcess.disabled = false;
-    btnProcess.innerHTML = '✨ Enhance Another';
-  }
-
-  async function processPdfWithAi(file, aiResult, btnProcess) {
-    const arrayBuffer = await readFileAsArrayBuffer(file);
-    const typedarray = new Uint8Array(arrayBuffer);
-    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-    const numPages = pdf.numPages;
-
-    let doc = null;
-    let firstPageOriginal = null;
-    let firstPageEnhanced = null;
-
-    for (let i = 1; i <= numPages; i++) {
-      btnProcess.innerHTML = `AI Enhancing Page ${i} of ${numPages}...`;
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 1.5 });
-
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(viewport.width);
-      canvas.height = Math.round(viewport.height);
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      const pageBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-      if (i === 1) firstPageOriginal = pageBase64;
-
-      const res = await fetch('/api/enhance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: pageBase64, scale: 2, face_enhance: false })
-      });
-
-      const data = await res.json();
-      const enhancedImgUrl = data.output || pageBase64;
-      if (i === 1) firstPageEnhanced = enhancedImgUrl;
-
-      const ptWidth = (viewport.width / 1.5) * 0.75;
-      const ptHeight = (viewport.height / 1.5) * 0.75;
-      const orientation = viewport.width > viewport.height ? 'l' : 'p';
-
-      if (i === 1) {
-        doc = new jsPDF({ orientation, unit: 'pt', format: [ptWidth, ptHeight], compress: true });
-        doc.addImage(enhancedImgUrl, 'JPEG', 0, 0, ptWidth, ptHeight, undefined, 'FAST');
-      } else {
-        doc.addPage([ptWidth, ptHeight], orientation);
-        doc.addImage(enhancedImgUrl, 'JPEG', 0, 0, ptWidth, ptHeight, undefined, 'FAST');
-      }
-    }
-
-    const finalPdfBlob = doc.output('blob');
-    renderComparisonView(aiResult, firstPageOriginal, firstPageEnhanced, true, file.name, finalPdfBlob);
-    btnProcess.disabled = false;
-    btnProcess.innerHTML = '✨ Enhance Another';
-  }
-
-  function renderComparisonView(container, beforeSrc, afterSrc, isPdf, originalName, pdfBlob = null) {
+  function renderComparisonView(container, beforeSrc, afterSrc, originalName) {
     container.classList.remove('hidden');
     container.innerHTML = `
       <div class="bg-gradient-to-b from-slate-900 to-slate-950 p-5 rounded-2xl text-white space-y-4 border border-slate-800">
@@ -216,14 +158,9 @@ export function renderAiEnhance(container, onBack) {
       btnUnlock.innerHTML = 'Downloading HD File...';
 
       const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
-
-      if (isPdf && pdfBlob) {
-        downloadFile(pdfBlob, `${baseName}_AI_HDR.pdf`);
-      } else {
-        const imageRes = await fetch(afterSrc);
-        const imageBlob = await imageRes.blob();
-        downloadFile(imageBlob, `${baseName}_AI_HDR.jpg`);
-      }
+      const imageRes = await fetch(afterSrc);
+      const imageBlob = await imageRes.blob();
+      downloadFile(imageBlob, `${baseName}_AI_HDR.jpg`);
 
       btnUnlock.innerHTML = '✅ Downloaded Successfully';
       setTimeout(() => {
