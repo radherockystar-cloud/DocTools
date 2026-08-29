@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, scale = 2, face_enhance = true } = req.body;
+    const { image, scale = 2, face_enhance = false } = req.body;
 
     if (!image) {
       return res.status(400).json({ success: false, error: 'No image data provided' });
@@ -19,46 +19,45 @@ export default async function handler(req, res) {
       });
     }
 
-    // Call Replicate Model
-    const startRes = await fetch('https://api.replicate.com/v1/predictions', {
+    // Call Official Model endpoint with Prefer: wait (Instant Sync Mode)
+    const response = await fetch('https://api.replicate.com/v1/models/nightmareai/real-esrgan/predictions', {
       method: 'POST',
       headers: {
-        'Authorization': `Token ${replicateApiToken}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${replicateApiToken.trim()}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'wait'
       },
       body: JSON.stringify({
-        version: '9283608cc6b7be6b65a8e44983db012355fde41320b90f41a30142255dbce94c',
         input: {
-          img: image,
+          image: image,
           scale: Number(scale),
           face_enhance: Boolean(face_enhance)
         }
       })
     });
 
-    const prediction = await startRes.json();
+    let prediction = await response.json();
 
-    if (startRes.status !== 201) {
+    if (response.status !== 200 && response.status !== 201) {
       return res.status(500).json({
         success: false,
-        error: prediction.detail || 'Failed to start AI task'
+        error: prediction.detail || prediction.error || 'Failed to start AI task'
       });
     }
 
-    // Poll until prediction completes
-    let result = prediction;
-    while (result.status !== 'succeeded' && result.status !== 'failed' && result.status !== 'canceled') {
-      await new Promise((r) => setTimeout(r, 1000));
-      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
-        headers: { 'Authorization': `Token ${replicateApiToken}` }
+    // If still running (rare fallback), poll until completed
+    while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
+      await new Promise((r) => setTimeout(r, 1500));
+      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+        headers: { 'Authorization': `Bearer ${replicateApiToken.trim()}` }
       });
-      result = await pollRes.json();
+      prediction = await pollRes.json();
     }
 
-    if (result.status === 'succeeded') {
-      return res.status(200).json({ success: true, output: result.output });
+    if (prediction.status === 'succeeded' && prediction.output) {
+      return res.status(200).json({ success: true, output: prediction.output });
     } else {
-      return res.status(500).json({ success: false, error: result.error || 'AI enhancement failed' });
+      return res.status(500).json({ success: false, error: prediction.error || 'AI enhancement failed' });
     }
 
   } catch (error) {
