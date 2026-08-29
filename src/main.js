@@ -1,5 +1,6 @@
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
+import { renderAiEnhance } from './tools/aiEnhance.js';
 import { renderImageCompress } from './tools/imageCompress.js';
 import { renderImageResize } from './tools/imageResize.js';
 import { renderImageConvert } from './tools/imageConvert.js';
@@ -28,7 +29,7 @@ customStyles.innerHTML = `
                 #fffafa !important;
     color: #0f172a !important;
   }
-  
+
   html:not(.dark) .hero-main-title {
     color: #0f172a !important;
   }
@@ -132,6 +133,16 @@ const app = document.getElementById('app');
 
 const TOOLS = [
   {
+    id: 'ai-enhance',
+    title: 'AI Photo & Doc Clarifier',
+    desc: 'Turn blurry photos, old bills, marksheet text & low-res PDFs into crystal clear HDR.',
+    badge: '✨ AI MAGIC',
+    iconShadow: 'box-shadow: 0 12px 26px -4px rgba(168, 85, 247, 0.6);',
+    iconBg: 'background: linear-gradient(135deg, #9333ea, #4f46e5);',
+    icon: '✨',
+    render: renderAiEnhance
+  },
+  {
     id: 'image-compress',
     title: 'Compress Image Size',
     desc: 'Reduce photo size to 20KB, 50KB, 100KB for government and exam portals.',
@@ -230,21 +241,21 @@ function showHome() {
   const container = document.getElementById('main-view');
   container.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 py-8 sm:py-14">
-      
+
       <!-- Hero Banner -->
       <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-        
+
         <!-- White + Pink Frosted Gradient Pill Badge -->
         <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-white via-rose-50 to-pink-50 dark:from-slate-900 dark:to-rose-950/80 text-rose-600 dark:text-rose-300 text-xs font-black px-4 py-1.5 rounded-full mb-4 border border-rose-200/90 dark:border-rose-800 shadow-md shadow-rose-500/10 backdrop-blur-md">
           <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse shadow-sm shadow-rose-500"></span>
           <span class="tracking-wide">100% Free & Private Browser Studio</span>
         </div>
-        
+
         <h1 class="hero-main-title text-3xl sm:text-5xl font-black tracking-tight leading-tight">
           Superfast Image & PDF <br class="hidden sm:inline" />
           <span class="hero-glow-text bg-gradient-to-r from-rose-600 via-pink-600 to-red-500 bg-clip-text text-transparent">Micro Tools</span>
         </h1>
-        
+
         <p class="mt-3.5 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto font-medium">
           Fast client-side utility suite to compress, resize, extract text, and convert documents for government exams and daily work.
         </p>
@@ -255,7 +266,7 @@ function showHome() {
 
       <!-- Feature Trust Badges -->
       <div class="mt-16 sm:mt-20 border-t border-rose-200/60 dark:border-slate-800 pt-12 grid grid-cols-1 md:grid-cols-3 gap-5 text-center">
-        
+
         <div class="trust-card-3d p-6 rounded-3xl">
           <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-slate-800 text-rose-600 dark:text-rose-400 flex items-center justify-center text-2xl mx-auto mb-3.5 shadow-sm">
             🔒
@@ -312,7 +323,7 @@ function showHome() {
         <h2 class="card-title-text text-lg font-black tracking-tight mb-1.5">
           ${tool.title}
         </h2>
-        
+
         <!-- Clean Description -->
         <p class="card-desc-text text-xs leading-relaxed font-medium">
           ${tool.desc}
