@@ -1,6 +1,5 @@
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
-import { renderAdmin } from './components/Admin.js';
 import { renderAiEnhance } from './tools/aiEnhance.js';
 import { renderImageCompress } from './tools/imageCompress.js';
 import { renderImageResize } from './tools/imageResize.js';
@@ -225,26 +224,9 @@ const TOOLS = [
   }
 ];
 
-function handleRoute() {
-  const container = document.getElementById('main-view');
-  if (!container) return;
-
-  if (window.location.hash === '#admin') {
-    renderAdmin(container, () => {
-      window.location.hash = '';
-      showHome();
-    });
-  } else {
-    showHome();
-  }
-}
-
 function initApp() {
   app.innerHTML = '';
-  renderNavbar(app, () => {
-    window.location.hash = '';
-    showHome();
-  });
+  renderNavbar(app, () => showHome());
 
   const mainContent = document.createElement('main');
   mainContent.id = 'main-view';
@@ -252,10 +234,8 @@ function initApp() {
   app.appendChild(mainContent);
 
   renderFooter(app);
-  handleRoute();
+  showHome();
 }
-
-window.addEventListener('hashchange', handleRoute);
 
 function showHome() {
   const container = document.getElementById('main-view');
