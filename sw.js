@@ -16,7 +16,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Network-First Strategy: Pehle internet se naya code layega, offline hone par cache use karega
+// Network-First Strategy: Pehle internet se naya code layega, offline par cache use karega
 self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/')) return;
 
