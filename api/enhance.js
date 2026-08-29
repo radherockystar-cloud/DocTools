@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, scale = 2, face_enhance = false } = req.body;
+    const { image, scale = 2, face_enhance = true } = req.body;
 
     if (!image) {
       return res.status(400).json({ success: false, error: 'No image data provided' });
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Call Official Model endpoint with Prefer: wait (Instant Sync Mode)
+    // Call Real-ESRGAN Model
     const response = await fetch('https://api.replicate.com/v1/models/nightmareai/real-esrgan/predictions', {
       method: 'POST',
       headers: {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // If still running (rare fallback), poll until completed
+    // Polling fallback
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
       await new Promise((r) => setTimeout(r, 1500));
       const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
