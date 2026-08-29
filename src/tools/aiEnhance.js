@@ -2,6 +2,9 @@ import { jsPDF } from 'jspdf';
 import { createDropzone } from '../components/Dropzone.js';
 import { formatBytes } from '../utils/fileHelpers.js';
 import { downloadFile } from '../utils/download.js';
+import { createComparisonSlider } from '../components/ComparisonSlider.js';
+import { showPaymentModal } from '../components/PaymentModal.js';
+import { saveOrder, getLatestPendingOrder, clearOrder } from '../utils/orderStorage.js';
 
 export function renderAiEnhance(container, onBack) {
   let selectedMode = 'photo'; // 'photo' or 'pdf'
@@ -13,13 +16,24 @@ export function renderAiEnhance(container, onBack) {
         ← Back to All Tools
       </button>
 
+      <!-- Recovery Banner (If app crashed earlier) -->
+      <div id="recovery-banner" class="hidden mb-6 bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center justify-between text-amber-300 text-xs">
+        <div>
+          <p class="font-bold">⚠️ Unsaved 4K File Recovered</p>
+          <p class="text-[11px] text-amber-400/80">Your previously processed file is ready for download.</p>
+        </div>
+        <button id="btn-recover-download" class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs">
+          Download Now
+        </button>
+      </div>
+
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm">
         
         <!-- Header -->
         <div class="mb-6">
           <div class="flex items-center gap-2">
             <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 dark:bg-purple-950 dark:text-purple-300 px-2.5 py-1 rounded-md">AI Neural Super-Engine</span>
-            <span class="text-xs font-bold text-amber-700 bg-amber-100 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded">₹3 / 4K File</span>
+            <span class="text-xs font-bold text-amber-700 bg-amber-100 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded" id="price-badge">₹3 / Photo</span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-2">AI Ultra Clarifier & HDR Upscaler</h1>
           <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Remini-grade 4K AI enhancement for photos & documents up to 100MB.</p>
@@ -27,25 +41,23 @@ export function renderAiEnhance(container, onBack) {
 
         <!-- 2 Main Option Cards (Photo vs PDF) -->
         <div class="grid grid-cols-2 gap-3.5 mb-6">
-          
-          <div id="tab-photo" class="mode-tab cursor-pointer border-2 border-purple-500 bg-purple-50/60 dark:bg-purple-950/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all">
+          <div id="tab-photo" class="mode-tab cursor-pointer border-2 border-purple-500 bg-purple-50/60 dark:bg-purple-950/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all shadow-sm">
             <span class="text-3xl mb-1.5">🖼️</span>
             <span class="font-extrabold text-sm text-slate-900 dark:text-white">AI Photo 4K</span>
-            <span class="text-[11px] text-purple-700 dark:text-purple-300 font-medium mt-0.5">Selfies, Portraits, Old Photos</span>
+            <span class="text-[11px] text-purple-700 dark:text-purple-300 font-bold mt-0.5">₹3 • Selfies, Portraits</span>
           </div>
 
           <div id="tab-pdf" class="mode-tab cursor-pointer border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all opacity-70 hover:opacity-100">
             <span class="text-3xl mb-1.5">📄</span>
             <span class="font-extrabold text-sm text-slate-900 dark:text-white">AI PDF & Doc</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Marksheets, Bills, Scans</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">₹5 • Marksheets, Scans</span>
           </div>
-
         </div>
 
         <!-- Dropzone Box -->
         <div id="dropzone-area"></div>
         
-        <!-- Action & Progress -->
+        <!-- Action Area -->
         <div id="action-area" class="hidden mt-6 space-y-6"></div>
       </div>
     </div>
@@ -55,8 +67,23 @@ export function renderAiEnhance(container, onBack) {
 
   const tabPhoto = container.querySelector('#tab-photo');
   const tabPdf = container.querySelector('#tab-pdf');
+  const priceBadge = container.querySelector('#price-badge');
   const dropzoneArea = container.querySelector('#dropzone-area');
   const actionArea = container.querySelector('#action-area');
+  const recoveryBanner = container.querySelector('#recovery-banner');
+  const btnRecover = container.querySelector('#btn-recover-download');
+
+  // Check for recovered session from crash
+  getLatestPendingOrder().then(order => {
+    if (order && order.outputUrl) {
+      recoveryBanner.classList.remove('hidden');
+      btnRecover.addEventListener('click', () => {
+        downloadFinalFile(order.outputUrl, order.fileName, order.fileType === 'pdf');
+        clearOrder(order.id);
+        recoveryBanner.classList.add('hidden');
+      });
+    }
+  });
 
   function renderDropzone() {
     dropzoneArea.innerHTML = '';
@@ -67,9 +94,9 @@ export function renderAiEnhance(container, onBack) {
     dropzoneArea.appendChild(dropzone);
   }
 
-  // Tab Switch logic
   tabPhoto.addEventListener('click', () => {
     selectedMode = 'photo';
+    priceBadge.textContent = '₹3 / Photo';
     tabPhoto.className = 'mode-tab cursor-pointer border-2 border-purple-500 bg-purple-50/60 dark:bg-purple-950/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all shadow-sm';
     tabPdf.className = 'mode-tab cursor-pointer border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all opacity-70 hover:opacity-100';
     actionArea.classList.add('hidden');
@@ -78,6 +105,7 @@ export function renderAiEnhance(container, onBack) {
 
   tabPdf.addEventListener('click', () => {
     selectedMode = 'pdf';
+    priceBadge.textContent = '₹5 / PDF';
     tabPdf.className = 'mode-tab cursor-pointer border-2 border-purple-500 bg-purple-50/60 dark:bg-purple-950/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all shadow-sm';
     tabPhoto.className = 'mode-tab cursor-pointer border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all opacity-70 hover:opacity-100';
     actionArea.classList.add('hidden');
@@ -86,14 +114,13 @@ export function renderAiEnhance(container, onBack) {
 
   renderDropzone();
 
-  // Smart Pre-Processor for 100MB inputs
   function prepareImagePayload(file) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
       img.onload = () => {
         URL.revokeObjectURL(url);
-        const MAX_DIM = 1800; // Optimal 4K Super-Resolution input
+        const MAX_DIM = 1800;
         let width = img.width;
         let height = img.height;
 
@@ -132,7 +159,7 @@ export function renderAiEnhance(container, onBack) {
         </div>
         <div class="overflow-hidden flex-1">
           <p class="font-semibold text-slate-800 dark:text-slate-200 text-sm truncate">${file.name}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Original Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Mode: <span class="font-bold uppercase text-purple-600">${selectedMode === 'photo' ? 'Remini 4K Photo' : 'AI Doc Clarifier'}</span></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Mode: <span class="font-bold uppercase text-purple-600">${selectedMode === 'photo' ? 'Photo (₹3)' : 'PDF (₹5)'}</span></p>
         </div>
       </div>
 
@@ -157,11 +184,36 @@ export function renderAiEnhance(container, onBack) {
           AI 4K Neural Enhancing... Please wait
         `;
 
-        if (isPdf) {
-          await processPdfEnhance(file, aiResult, btnProcess);
-        } else {
-          await processPhotoEnhance(file, aiResult, btnProcess);
+        const base64Data = await prepareImagePayload(file);
+
+        const res = await fetch('/api/enhance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: base64Data,
+            scale: 2,
+            face_enhance: selectedMode === 'photo'
+          })
+        });
+
+        const data = await res.json();
+        if (!data.success || !data.output) {
+          throw new Error(data.error || 'Failed to generate 4K image');
         }
+
+        // Save order in local IndexedDB (Crash Protection)
+        const orderId = 'order_' + Date.now();
+        await saveOrder({
+          id: orderId,
+          fileName: file.name,
+          fileType: selectedMode,
+          outputUrl: data.output,
+          timestamp: Date.now()
+        });
+
+        renderReminiResult(aiResult, base64Data, data.output, selectedMode === 'pdf', file.name, orderId);
+        btnProcess.disabled = false;
+        btnProcess.innerHTML = '✨ Enhance Another';
 
       } catch (err) {
         alert('Enhancement Error: ' + err.message);
@@ -171,52 +223,7 @@ export function renderAiEnhance(container, onBack) {
     });
   }
 
-  async function processPhotoEnhance(file, resultContainer, btn) {
-    const base64Data = await prepareImagePayload(file);
-
-    const res = await fetch('/api/enhance', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image: base64Data,
-        scale: 2,
-        face_enhance: selectedMode === 'photo'
-      })
-    });
-
-    const data = await res.json();
-    if (!data.success || !data.output) {
-      throw new Error(data.error || 'Failed to generate 4K image');
-    }
-
-    renderComparison(resultContainer, base64Data, data.output, false, file.name);
-    btn.disabled = false;
-    btn.innerHTML = '✨ Enhance Another';
-  }
-
-  async function processPdfEnhance(file, resultContainer, btn) {
-    // For direct PDF or Doc Image in PDF mode
-    const base64Data = await prepareImagePayload(file);
-
-    const res = await fetch('/api/enhance', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image: base64Data,
-        scale: 2,
-        face_enhance: false
-      })
-    });
-
-    const data = await res.json();
-    const outputImg = data.output || base64Data;
-
-    renderComparison(resultContainer, base64Data, outputImg, true, file.name);
-    btn.disabled = false;
-    btn.innerHTML = '✨ Enhance Another';
-  }
-
-  function renderComparison(container, beforeSrc, afterSrc, isPdfMode, originalName) {
+  function renderReminiResult(container, beforeSrc, afterSrc, isPdfMode, originalName, orderId) {
     container.classList.remove('hidden');
     container.innerHTML = `
       <div class="bg-gradient-to-b from-slate-900 to-slate-950 p-5 sm:p-6 rounded-3xl text-white space-y-5 border border-slate-800 shadow-2xl">
@@ -224,75 +231,70 @@ export function renderAiEnhance(container, onBack) {
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="text-xs font-black uppercase tracking-wider text-emerald-400">4K Ultra HDR Complete</span>
+            <span class="text-xs font-black uppercase tracking-wider text-emerald-400">4K Ultra HDR Ready</span>
           </div>
-          <span class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-bold">Optimized Output</span>
+          <span class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-bold">Swipe Slider</span>
         </div>
 
-        <!-- Before & After Comparison Grid -->
-        <div class="grid grid-cols-2 gap-3 sm:gap-4">
-          <div class="space-y-1.5">
-            <div class="flex justify-between items-center px-1">
-              <p class="text-[11px] font-bold text-slate-400 uppercase">Original (Blur)</p>
-            </div>
-            <div class="h-48 sm:h-64 bg-slate-800/80 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-700">
-              <img src="${beforeSrc}" class="w-full h-full object-contain" />
-            </div>
-          </div>
+        <!-- Remini-style interactive Swipe Slider -->
+        <div id="slider-mount"></div>
 
-          <div class="space-y-1.5">
-            <div class="flex justify-between items-center px-1">
-              <p class="text-[11px] font-bold text-emerald-400 uppercase">AI 4K HDR Sharp</p>
-            </div>
-            <div class="h-48 sm:h-64 bg-slate-800/80 rounded-2xl overflow-hidden flex items-center justify-center border border-emerald-500/40 relative">
-              <img src="${afterSrc}" class="w-full h-full object-contain" />
-              <div class="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
-                <span class="text-[10px] font-black uppercase text-white/50 tracking-widest rotate-[-25deg]">DocTools 4K Preview</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Unlock Card -->
+        <!-- Paywall Unlock Card -->
         <div class="bg-slate-800/80 border border-slate-700 p-4 sm:p-5 rounded-2xl space-y-3.5">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs sm:text-sm font-extrabold text-white">Download Full 4K HDR (No Watermark)</p>
-              <p class="text-[11px] text-slate-400">Micro-payment of ₹3 only for this file</p>
+              <p class="text-xs sm:text-sm font-extrabold text-white">Download Full 4K HDR (Watermark Free)</p>
+              <p class="text-[11px] text-slate-400">One-time payment of <span class="text-amber-400 font-bold">${isPdfMode ? '₹5' : '₹3'}</span></p>
             </div>
-            <span class="text-lg font-black text-amber-400">₹3.00</span>
+            <span class="text-xl font-black text-amber-400">${isPdfMode ? '₹5.00' : '₹3.00'}</span>
           </div>
 
-          <button id="btn-unlock-hd" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-black py-3.5 px-4 rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
-            ⚡ Pay ₹3 via UPI & Download 4K ${isPdfMode ? 'PDF' : 'Photo'}
+          <button id="btn-unlock-hd" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-black py-4 px-4 rounded-xl transition-all text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+            ⚡ Pay ${isPdfMode ? '₹5' : '₹3'} via UPI & Download 4K ${isPdfMode ? 'PDF' : 'Photo'}
           </button>
         </div>
 
       </div>
     `;
 
+    // Mount Interactive Slider
+    const sliderMount = container.querySelector('#slider-mount');
+    sliderMount.appendChild(createComparisonSlider(beforeSrc, afterSrc));
+
     const btnUnlock = container.querySelector('#btn-unlock-hd');
-    btnUnlock.addEventListener('click', async () => {
-      btnUnlock.disabled = true;
-      btnUnlock.innerHTML = 'Downloading 4K File...';
+    btnUnlock.addEventListener('click', () => {
+      showPaymentModal({
+        fileType: isPdfMode ? 'pdf' : 'photo',
+        fileName: originalName,
+        onPaymentSuccess: async (paymentDetails) => {
+          btnUnlock.disabled = true;
+          btnUnlock.innerHTML = '⚡ Payment Verified! Downloading 4K File...';
 
-      const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
-
-      if (isPdfMode) {
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-        doc.addImage(afterSrc, 'JPEG', 20, 20, 555, 780, undefined, 'FAST');
-        doc.save(`${baseName}_4K_HDR.pdf`);
-      } else {
-        const imageRes = await fetch(afterSrc);
-        const imageBlob = await imageRes.blob();
-        downloadFile(imageBlob, `${baseName}_4K_HDR.jpg`);
-      }
-
-      btnUnlock.innerHTML = '✅ Downloaded Successfully';
-      setTimeout(() => {
-        btnUnlock.disabled = false;
-        btnUnlock.innerHTML = `⚡ Pay ₹3 via UPI & Download 4K ${isPdfMode ? 'PDF' : 'Photo'}`;
-      }, 2500);
+          // 1-Second Auto-Download Trigger
+          setTimeout(async () => {
+            await downloadFinalFile(afterSrc, originalName, isPdfMode);
+            await clearOrder(orderId);
+            btnUnlock.innerHTML = '✅ Downloaded Successfully';
+            setTimeout(() => {
+              btnUnlock.disabled = false;
+              btnUnlock.innerHTML = `⚡ Pay ${isPdfMode ? '₹5' : '₹3'} via UPI & Download 4K ${isPdfMode ? 'PDF' : 'Photo'}`;
+            }, 2500);
+          }, 1000);
+        }
+      });
     });
+  }
+
+  async function downloadFinalFile(url, originalName, isPdfMode) {
+    const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
+    if (isPdfMode) {
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      doc.addImage(url, 'JPEG', 20, 20, 555, 780, undefined, 'FAST');
+      doc.save(`${baseName}_4K_HDR.pdf`);
+    } else {
+      const imageRes = await fetch(url);
+      const imageBlob = await imageRes.blob();
+      downloadFile(imageBlob, `${baseName}_4K_HDR.jpg`);
+    }
   }
 }
