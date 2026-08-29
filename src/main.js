@@ -1,3 +1,4 @@
+import { renderGovtExamHub } from './tools/govtExamHub.js';
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
 import { renderAiEnhance } from './tools/aiEnhance.js';
@@ -132,6 +133,16 @@ document.head.appendChild(customStyles);
 const app = document.getElementById('app');
 
 const TOOLS = [
+    {
+    id: 'govt-exam-hub',
+    title: 'Govt Exam Portals Hub',
+    desc: 'Direct official links for SSC, UPSC, Banking, NTA & Railway exam applications.',
+    badge: 'PORTALS',
+    iconShadow: 'box-shadow: 0 12px 26px -4px rgba(14, 165, 233, 0.55);',
+    iconBg: 'background: linear-gradient(135deg, #0ea5e9, #2563eb);',
+    icon: '🏛️',
+    render: renderGovtExamHub
+  },
   {
     id: 'ai-enhance',
     title: 'AI Photo & Doc Clarifier',
