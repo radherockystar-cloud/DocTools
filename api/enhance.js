@@ -4,61 +4,48 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, scale = 2, face_enhance = true } = req.body;
-
+    const { image } = req.body;
     if (!image) {
-      return res.status(400).json({ success: false, error: 'No image data provided' });
+      return res.status(400).json({ success: false, error: 'No image provided' });
     }
 
-    const replicateApiToken = process.env.REPLICATE_API_TOKEN;
-
-    if (!replicateApiToken) {
-      return res.status(500).json({
-        success: false,
-        error: 'REPLICATE_API_TOKEN is missing in Vercel Environment Variables.'
+    const apiKey = process.env.SEGMIND_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ 
+        success: false, 
+        error: 'SEGMIND_API_KEY is missing in Vercel Environment Variables.' 
       });
     }
 
-    // Call Real-ESRGAN Model
-    const response = await fetch('https://api.replicate.com/v1/models/nightmareai/real-esrgan/predictions', {
+    // Clean base64 prefix
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+
+    // Call Real AI CodeFormer Model on Segmind
+    const segmindRes = await fetch('https://api.segmind.com/v1/codeformer', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${replicateApiToken.trim()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'wait'
+        'x-api-key': apiKey.trim(),
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        input: {
-          image: image,
-          scale: Number(scale),
-          face_enhance: Boolean(face_enhance)
-        }
+        image: base64Data,
+        codeformer_fidelity: 0.75,
+        background_enhance: true,
+        face_upsample: true,
+        upscale: 2
       })
     });
 
-    let prediction = await response.json();
-
-    if (response.status !== 200 && response.status !== 201) {
-      return res.status(500).json({
-        success: false,
-        error: prediction.detail || prediction.error || 'Failed to start AI task'
-      });
+    if (!segmindRes.ok) {
+      const errText = await segmindRes.text();
+      return res.status(500).json({ success: false, error: 'AI Engine Error: ' + errText });
     }
 
-    // Polling fallback
-    while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      await new Promise((r) => setTimeout(r, 1500));
-      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
-        headers: { 'Authorization': `Bearer ${replicateApiToken.trim()}` }
-      });
-      prediction = await pollRes.json();
-    }
+    // Convert returned image buffer to clean base64 URL
+    const buffer = await segmindRes.arrayBuffer();
+    const outputBase64 = `data:image/jpeg;base64,${Buffer.from(buffer).toString('base64')}`;
 
-    if (prediction.status === 'succeeded' && prediction.output) {
-      return res.status(200).json({ success: true, output: prediction.output });
-    } else {
-      return res.status(500).json({ success: false, error: prediction.error || 'AI enhancement failed' });
-    }
+    return res.status(200).json({ success: true, output: outputBase64 });
 
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });

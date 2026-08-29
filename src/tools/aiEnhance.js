@@ -16,7 +16,7 @@ export function renderAiEnhance(container, onBack) {
         ← Back to All Tools
       </button>
 
-      <!-- Crash Recovery Banner -->
+      <!-- Recovery Banner -->
       <div id="recovery-banner" class="hidden mb-6 bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center justify-between text-amber-300 text-xs">
         <div>
           <p class="font-bold">⚠️ Unsaved 4K File Recovered</p>
@@ -31,25 +31,25 @@ export function renderAiEnhance(container, onBack) {
         
         <div class="mb-6">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 dark:bg-purple-950 dark:text-purple-300 px-2.5 py-1 rounded-md">Neural Super-Engine</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 dark:bg-purple-950 dark:text-purple-300 px-2.5 py-1 rounded-md">Neural AI Super-Engine</span>
             <span class="text-xs font-bold text-amber-700 bg-amber-100 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded" id="price-badge">₹3 / Photo</span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-2">AI Ultra Clarifier & HDR Upscaler</h1>
-          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Enhance blurry photos & documents to crystal clear 4K HDR quality.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Deep neural reconstruction for blurry portraits, documents & heavy files up to 100MB.</p>
         </div>
 
-        <!-- 2 Main Modes -->
+        <!-- 2 Selection Modes -->
         <div class="grid grid-cols-2 gap-3.5 mb-6">
           <div id="tab-photo" class="mode-tab cursor-pointer border-2 border-purple-500 bg-purple-50/60 dark:bg-purple-950/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all shadow-sm">
             <span class="text-3xl mb-1.5">🖼️</span>
             <span class="font-extrabold text-sm text-slate-900 dark:text-white">AI Photo 4K</span>
-            <span class="text-[11px] text-purple-700 dark:text-purple-300 font-bold mt-0.5">₹3 • Selfies, Portraits</span>
+            <span class="text-[11px] text-purple-700 dark:text-purple-300 font-bold mt-0.5">₹3 • Remini-Grade Faces</span>
           </div>
 
           <div id="tab-pdf" class="mode-tab cursor-pointer border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 p-4 rounded-2xl flex flex-col items-center text-center transition-all opacity-70 hover:opacity-100">
             <span class="text-3xl mb-1.5">📄</span>
             <span class="font-extrabold text-sm text-slate-900 dark:text-white">AI PDF & Doc</span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">₹5 • Marksheets, Scans</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">₹5 • Marksheets, Forms</span>
           </div>
         </div>
 
@@ -109,54 +109,33 @@ export function renderAiEnhance(container, onBack) {
 
   renderDropzone();
 
-  // In-Browser High-Pass Unsharp & HDR Upscaling Engine
-  function enhanceImageLocally(file, isDocMode) {
+  function prepareImagePayload(file) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
       img.onload = () => {
         URL.revokeObjectURL(url);
-        
-        // 2X Super-Resolution Upscaling
-        const width = Math.min(img.width * 2, 3840);
-        const height = Math.round((img.height / img.width) * width);
+        const MAX_DIM = 1600;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > MAX_DIM) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else if (height > MAX_DIM) {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
 
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-
-        // Draw High-Res Base
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Apply Neural Contrast & Sharpening Shader
-        const imgData = ctx.getImageData(0, 0, width, height);
-        const data = imgData.data;
-
-        const contrast = isDocMode ? 1.35 : 1.18; 
-        const factor = (259 * (contrast * 255 + 255)) / (255 * (259 - contrast * 255));
-
-        for (let i = 0; i < data.length; i += 4) {
-          // Contrast Boost
-          data[i] = factor * (data[i] - 128) + 128;     // R
-          data[i+1] = factor * (data[i+1] - 128) + 128; // G
-          data[i+2] = factor * (data[i+2] - 128) + 128; // B
-
-          // Doc Deep Black Ink Enhancement
-          if (isDocMode) {
-            const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-            if (gray < 140) {
-              data[i] *= 0.75;
-              data[i+1] *= 0.75;
-              data[i+2] *= 0.75;
-            }
-          }
-        }
-        ctx.putImageData(imgData, 0, 0);
-
-        resolve(canvas.toDataURL('image/jpeg', 0.95));
+        resolve(canvas.toDataURL('image/jpeg', 0.90));
       };
       img.onerror = reject;
       img.src = url;
@@ -175,12 +154,12 @@ export function renderAiEnhance(container, onBack) {
         </div>
         <div class="overflow-hidden flex-1">
           <p class="font-semibold text-slate-800 dark:text-slate-200 text-sm truncate">${file.name}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Mode: <span class="font-bold uppercase text-purple-600">${selectedMode === 'photo' ? 'Photo 4K (₹3)' : 'PDF 4K (₹5)'}</span></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Input Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Mode: <span class="font-bold uppercase text-purple-600">${selectedMode === 'photo' ? 'Photo 4K (₹3)' : 'PDF 4K (₹5)'}</span></p>
         </div>
       </div>
 
       <button id="btn-process-ai" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg shadow-purple-500/25 transition-all text-sm flex items-center justify-center gap-2">
-        ✨ Enhance to 4K Ultra HDR (Remini Preview)
+        ✨ Enhance with Neural AI (Remini Preview)
       </button>
 
       <div id="ai-result" class="hidden space-y-5"></div>
@@ -197,30 +176,39 @@ export function renderAiEnhance(container, onBack) {
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          Processing 4K Neural Enhancement...
+          Reconstructing details with AI... Please wait
         `;
 
-        // Direct local high-speed processing
-        const originalPreviewUrl = URL.createObjectURL(file);
-        const enhanced4KUrl = await enhanceImageLocally(file, selectedMode === 'pdf');
+        const base64Data = await prepareImagePayload(file);
+
+        const res = await fetch('/api/enhance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data })
+        });
+
+        const data = await res.json();
+        if (!data.success || !data.output) {
+          throw new Error(data.error || 'AI Enhancement failed');
+        }
 
         const orderId = 'order_' + Date.now();
         await saveOrder({
           id: orderId,
           fileName: file.name,
           fileType: selectedMode,
-          outputUrl: enhanced4KUrl,
+          outputUrl: data.output,
           timestamp: Date.now()
         });
 
-        renderReminiResult(aiResult, originalPreviewUrl, enhanced4KUrl, selectedMode === 'pdf', file.name, orderId);
+        renderReminiResult(aiResult, base64Data, data.output, selectedMode === 'pdf', file.name, orderId);
         btnProcess.disabled = false;
-        btnProcess.innerHTML = '✨ Enhance Another';
+        btnProcess.innerHTML = '✨ Enhance Another File';
 
       } catch (err) {
-        alert('Enhancement Error: ' + err.message);
+        alert('AI Enhancement Error: ' + err.message);
         btnProcess.disabled = false;
-        btnProcess.innerHTML = '✨ Enhance to 4K Ultra HDR (Remini Preview)';
+        btnProcess.innerHTML = '✨ Enhance with Neural AI (Remini Preview)';
       }
     });
   }
@@ -233,20 +221,18 @@ export function renderAiEnhance(container, onBack) {
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="text-xs font-black uppercase tracking-wider text-emerald-400">4K Ultra HDR Ready</span>
+            <span class="text-xs font-black uppercase tracking-wider text-emerald-400">✨ AI 4K HDR Complete</span>
           </div>
-          <span class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-bold">Swipe to Compare</span>
+          <span class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-bold">Swipe Slider</span>
         </div>
 
-        <!-- Remini-style interactive Swipe Slider -->
         <div id="slider-mount"></div>
 
-        <!-- Paywall Unlock Card (Appears only on download) -->
         <div class="bg-slate-800/80 border border-slate-700 p-4 sm:p-5 rounded-2xl space-y-3.5">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs sm:text-sm font-extrabold text-white">Download Full 4K HDR (Watermark Free)</p>
-              <p class="text-[11px] text-slate-400">One-time micro-payment: <span class="text-amber-400 font-bold">${isPdfMode ? '₹5' : '₹3'}</span></p>
+              <p class="text-xs sm:text-sm font-extrabold text-white">Download Full AI 4K (Watermark Free)</p>
+              <p class="text-[11px] text-slate-400">Fixed Micro-Payment: <span class="text-amber-400 font-bold">${isPdfMode ? '₹5' : '₹3'}</span></p>
             </div>
             <span class="text-xl font-black text-amber-400">${isPdfMode ? '₹5.00' : '₹3.00'}</span>
           </div>
@@ -276,7 +262,7 @@ export function renderAiEnhance(container, onBack) {
             btnUnlock.innerHTML = '✅ Downloaded Successfully';
             setTimeout(() => {
               btnUnlock.disabled = false;
-              btnUnlock.innerHTML = `⚡ Pay ${isPdfMode ? '₹5' : '₹3'} via UPI & Download 4K ${isPdfMode ? 'PDF' : 'Photo'}`;
+              btnUnlock.innerHTML = `⚡ Pay ${isPdfMode ? '₹5' : '₹3'} via UPI & Download`;
             }, 2500);
           }, 1000);
         }
