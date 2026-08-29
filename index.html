@@ -3,11 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>DocTools - Superfast Image & PDF Micro Tools</title>
+    
+    <title>DocTools - Free Online Image & PDF Tools | Compress, Resize, Convert</title>
+    <meta name="description" content="Free online micro tools for Image and PDF. Compress JPG/PNG to 20KB/50KB/100KB, resize photos, convert JPG to PDF, merge PDF, and extract text with fast OCR. 100% free & client-side secure." />
+    <meta name="keywords" content="image compressor, photo size reducer, compress jpeg to 50kb, resize image online, jpg to pdf converter, merge pdf, pdf compressor, ocr image to text, photo ko pdf kaise banaye" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://freedoctools.online/" />
+
+    <!-- Open Graph / Social Media SEO -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://freedoctools.online/" />
+    <meta property="og:title" content="DocTools - Superfast Free Image & PDF Micro Tools" />
+    <meta property="og:description" content="Fast, secure, free image compression, resizing, PDF tools, and OCR in your browser." />
+    <meta property="og:image" content="https://freedoctools.online/icon-512.png" />
+
+    <!-- Twitter SEO -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://freedoctools.online/" />
+    <meta name="twitter:title" content="DocTools - Free Image & PDF Tools" />
+    <meta name="twitter:description" content="Compress, resize, and convert images & PDFs online instantly." />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#ffffff" />
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,32 +40,15 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
             }
           }
         }
       }
     </script>
   </head>
-  <body class="min-h-screen flex flex-col font-sans transition-colors duration-200 antialiased selection:bg-rose-500 selection:text-white">
+  <body class="min-h-screen flex flex-col font-sans bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
     <div id="app" class="flex flex-col min-h-screen"></div>
-
     <script type="module" src="/src/main.js"></script>
-
-    <!-- Auto Cache-Killer & Live Sync -->
-    <script>
-      if ('caches' in window) {
-        caches.keys().then((names) => {
-          names.forEach((name) => caches.delete(name));
-        });
-      }
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-          for (let reg of registrations) {
-            reg.unregister();
-          }
-        });
-      }
-    </script>
   </body>
 </html>
