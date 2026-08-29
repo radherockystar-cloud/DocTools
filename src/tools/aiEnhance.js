@@ -36,30 +36,48 @@ export function renderAiEnhance(container, onBack) {
   });
   dropzoneArea.appendChild(dropzone);
 
-  let currentFile = null;
-
-  function readFileData(file) {
+  // Client-side smart downscaler for Vercel 4.5MB limit
+  function optimizeImageForAI(file) {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const MAX_DIM = 1400;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > MAX_DIM) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else if (height > MAX_DIM) {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+
+        resolve(canvas.toDataURL('image/jpeg', 0.88));
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
     });
   }
 
   async function handleFile(file) {
-    currentFile = file;
-    const isPdf = file.type === 'application/pdf' || file.name.endsWith('.pdf');
-
     actionArea.classList.remove('hidden');
     actionArea.innerHTML = `
       <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
-        <div class="w-12 h-12 rounded-xl ${isPdf ? 'bg-rose-100 text-rose-600' : 'bg-purple-100 text-purple-600'} flex items-center justify-center font-bold text-2xl">
-          ${isPdf ? '📄' : '🖼️'}
+        <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-2xl">
+          🖼️
         </div>
         <div class="overflow-hidden">
           <p class="font-semibold text-slate-800 dark:text-slate-200 text-sm truncate">${file.name}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Original Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span> • Type: <span class="font-bold uppercase text-purple-700 dark:text-purple-400">${isPdf ? 'Document' : 'Photo Image'}</span></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Original Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span></p>
         </div>
       </div>
 
@@ -84,7 +102,8 @@ export function renderAiEnhance(container, onBack) {
           AI Neural Processing... Please wait
         `;
 
-        const base64Data = await readFileData(file);
+        // Optimize image to safe payload (<500KB)
+        const base64Data = await optimizeImageForAI(file);
 
         const res = await fetch('/api/enhance', {
           method: 'POST',
@@ -92,9 +111,16 @@ export function renderAiEnhance(container, onBack) {
           body: JSON.stringify({ image: base64Data, scale: 2, face_enhance: true })
         });
 
-        const data = await res.json();
-        if (!data.success || !data.output) {
-          throw new Error(data.error || 'Failed to enhance image');
+        const rawText = await res.text();
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (e) {
+          throw new Error('Server error: ' + rawText.substring(0, 150));
+        }
+
+        if (!res.ok || !data.success || !data.output) {
+          throw new Error(data.error || 'AI processing failed. Check API configuration.');
         }
 
         renderComparisonView(aiResult, base64Data, data.output, file.name);
