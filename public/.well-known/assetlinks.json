@@ -1,12 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "app.vercel.doctools_phi.twa",
-      "sha256_cert_fingerprints": [
-        "14:6D:E9:7D:0F:52:AB:78:E8:4A:2C:9B:F3:11:04:8E:7E:88:65:42:1E:1D:93:D2:76:A8:10:E2:2E:CA:04:E1"
-      ]
-    }
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.doctools_phi.twa",
+    "sha256_cert_fingerprints": ["87:BD:8C:E4:E9:EC:55:65:76:6A:51:FE:6A:A4:98:5C:8E:A9:EB:61:5A:26:8B:4F:E4:16:59:DD:E0:55:6F:A7"]
   }
-]
+}]
