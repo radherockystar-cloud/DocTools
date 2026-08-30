@@ -1,3 +1,5 @@
+import { inject } from '@vercel/analytics';
+inject();
 import { renderGovtExamHub } from './tools/govtExamHub.js';
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
