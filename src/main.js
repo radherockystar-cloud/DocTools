@@ -3,7 +3,6 @@ inject();
 import { renderGovtExamHub } from './tools/govtExamHub.js';
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
-import { renderAiEnhance } from './tools/aiEnhance.js';
 import { renderImageCompress } from './tools/imageCompress.js';
 import { renderImageResize } from './tools/imageResize.js';
 import { renderImageConvert } from './tools/imageConvert.js';
@@ -144,16 +143,6 @@ const TOOLS = [
     iconBg: 'background: linear-gradient(135deg, #0ea5e9, #2563eb);',
     icon: '🏛️',
     render: renderGovtExamHub
-  },
-  {
-    id: 'ai-enhance',
-    title: 'AI Photo & Doc Clarifier',
-    desc: 'Turn blurry photos, old bills, marksheet text & low-res PDFs into crystal clear HDR.',
-    badge: '✨ AI MAGIC',
-    iconShadow: 'box-shadow: 0 12px 26px -4px rgba(168, 85, 247, 0.6);',
-    iconBg: 'background: linear-gradient(135deg, #9333ea, #4f46e5);',
-    icon: '✨',
-    render: renderAiEnhance
   },
   {
     id: 'image-compress',
