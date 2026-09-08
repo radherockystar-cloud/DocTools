@@ -146,6 +146,21 @@ function initApp() {
   window.addEventListener('route-change', (e) => {
     renderRoute(e.detail.path);
   });
+
+  // Global listener for live searching tools
+  window.addEventListener('filter-tools', (e) => {
+    const query = (e.detail && e.detail.query) ? e.detail.query.toLowerCase() : '';
+    const toolCards = document.querySelectorAll('.tool-3d-card');
+    toolCards.forEach(card => {
+      const titleText = card.querySelector('.card-title-text')?.textContent.toLowerCase() || '';
+      const descText = card.querySelector('.card-desc-text')?.textContent.toLowerCase() || '';
+      if (titleText.includes(query) || descText.includes(query)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 }
 
 function showHome() {
@@ -219,7 +234,6 @@ function showHome() {
   const grid = container.querySelector('#tools-grid');
   if (!grid) return;
 
-  TOOLS.TOOLS = TOOLS || [];
   TOOLS.forEach(tool => {
     const card = document.createElement('div');
     card.className = 'tool-3d-card rounded-3xl p-6 flex flex-col justify-between cursor-pointer group';
