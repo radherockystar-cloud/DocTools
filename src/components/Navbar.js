@@ -10,12 +10,12 @@ export function renderNavbar(container, onHome) {
   nav.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       
-      <!-- Left Controls: Back Button (if on subpage) & Brand Logo -->
+      <!-- Left Controls: Back to Menu Button (if on subpage) & Brand Logo -->
       <div class="flex items-center gap-2.5">
         ${!isHome ? `
-          <button id="nav-back-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-slate-700 text-rose-600 dark:text-rose-400 font-bold text-xs sm:text-sm border border-rose-200 dark:border-slate-700 transition-all active:scale-95 shadow-sm">
+          <button id="nav-back-btn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-slate-700 text-rose-600 dark:text-rose-400 font-bold text-xs sm:text-sm border border-rose-200 dark:border-slate-700 transition-all active:scale-95 shadow-sm">
             <span>←</span>
-            <span>Back</span>
+            <span>Back to Menu</span>
           </button>
         ` : ''}
 
