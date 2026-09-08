@@ -1,21 +1,34 @@
 import { navigate } from '../router.js';
 
 export function renderNavbar(container, onHome) {
+  const currentPath = window.location.pathname;
+  const isHome = currentPath === '/' || currentPath === '';
+
   const nav = document.createElement('header');
   nav.id = 'main-header-bar';
   nav.className = 'sticky top-0 z-40 bg-white/90 dark:bg-[#0b0f19]/90 backdrop-blur-md border-b border-rose-200/60 dark:border-slate-800 transition-colors shadow-sm';
   nav.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       
-      <!-- 3D Brand Logo -->
-      <button id="nav-brand" class="flex items-center gap-2.5 group focus:outline-none">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 via-pink-600 to-red-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-rose-500/30 group-hover:scale-105 transition-transform">
-          ⚡
-        </div>
-        <span class="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-          Doc<span class="bg-gradient-to-r from-rose-600 via-pink-600 to-red-500 bg-clip-text text-transparent">Tools</span>
-        </span>
-      </button>
+      <!-- Left Controls: Back Button (if on subpage) & Brand Logo -->
+      <div class="flex items-center gap-2.5">
+        ${!isHome ? `
+          <button id="nav-back-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-slate-700 text-rose-600 dark:text-rose-400 font-bold text-xs sm:text-sm border border-rose-200 dark:border-slate-700 transition-all active:scale-95 shadow-sm">
+            <span>←</span>
+            <span>Back</span>
+          </button>
+        ` : ''}
+
+        <!-- 3D Brand Logo -->
+        <button id="nav-brand" class="flex items-center gap-2.5 group focus:outline-none">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 via-pink-600 to-red-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-rose-500/30 group-hover:scale-105 transition-transform">
+            ⚡
+          </div>
+          <span class="text-xl font-black tracking-tight text-slate-900 dark:text-white">
+            Doc<span class="bg-gradient-to-r from-rose-600 via-pink-600 to-red-500 bg-clip-text text-transparent">Tools</span>
+          </span>
+        </button>
+      </div>
 
       <!-- Right Action Controls -->
       <div class="flex items-center gap-2 sm:gap-3">
@@ -37,6 +50,13 @@ export function renderNavbar(container, onHome) {
 
   container.appendChild(nav);
   nav.querySelector('#nav-brand').addEventListener('click', onHome);
+  
+  const backBtn = nav.querySelector('#nav-back-btn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      navigate('/');
+    });
+  }
 
   // Standalone Global Drawer attached to <body> (100% Solid Color)
   let drawerBackdrop = document.getElementById('global-drawer-backdrop');
