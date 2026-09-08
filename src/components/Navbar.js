@@ -1,4 +1,4 @@
-import { openModal } from './InfoModal.js';
+import { navigate } from '../router.js';
 
 export function renderNavbar(container, onHome) {
   const nav = document.createElement('header');
@@ -59,37 +59,37 @@ export function renderNavbar(container, onHome) {
           <button id="btn-close-global-drawer" style="width: 36px; height: 36px; border-radius: 50%; background: #fff1f2; border: 1px solid #fecdd3; font-size: 16px; font-weight: bold; color: #e11d48; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
         </div>
 
-        <!-- Navigation Menu List -->
+        <!-- Navigation Menu List linked to real pages -->
         <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
           
-          <button data-drawer-action="home" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+          <button data-link="/" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
             <svg style="width: 22px; height: 22px; stroke: #e11d48; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             <span>Home / All Tools</span>
           </button>
 
-          <button data-drawer-action="about" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+          <button data-link="/about" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
             <svg style="width: 22px; height: 22px; stroke: #ec4899; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>About Us</span>
           </button>
 
-          <button data-drawer-action="privacy" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+          <button data-link="/privacy-policy" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
             <svg style="width: 22px; height: 22px; stroke: #10b981; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             <span>Privacy Policy</span>
           </button>
 
-          <button data-drawer-action="terms" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+          <button data-link="/terms" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
             <svg style="width: 22px; height: 22px; stroke: #f59e0b; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
             <span>Terms & Conditions</span>
           </button>
 
-          <button data-drawer-action="help" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+          <button data-link="/contact" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
             <svg style="width: 22px; height: 22px; stroke: #f43f5e; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             <span>Help & Contact Us</span>
           </button>
 
-          <button data-drawer-action="settings" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
-            <svg style="width: 22px; height: 22px; stroke: #ec4899; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            <span>Settings (Theme Change)</span>
+          <button data-link="/how-to-use" class="drawer-nav-item" style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: none; background: transparent; text-align: left; font-size: 15px; font-weight: 700; color: #1e293b; cursor: pointer; transition: background 0.2s;">
+            <svg style="width: 22px; height: 22px; stroke: #3b82f6; fill: none;" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>How to Use All Tools</span>
           </button>
 
         </div>
@@ -186,15 +186,11 @@ export function renderNavbar(container, onHome) {
     if (e.target === drawerBackdrop) closeDrawer();
   });
 
-  drawerPanel.querySelectorAll('button[data-drawer-action]').forEach(btn => {
+  drawerPanel.querySelectorAll('button[data-link]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const action = btn.getAttribute('data-drawer-action');
+      const path = btn.getAttribute('data-link');
       closeDrawer();
-      if (action === 'home') {
-        onHome();
-      } else {
-        openModal(action);
-      }
+      navigate(path);
     });
   });
 }

@@ -5,7 +5,6 @@ import { createDropzone } from '../components/Dropzone.js';
 import { formatBytes, readFileAsArrayBuffer } from '../utils/fileHelpers.js';
 import { downloadFile } from '../utils/download.js';
 
-// Setup Robust Worker
 try {
   pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -18,20 +17,35 @@ try {
 export function renderPdfCompress(container, onBack) {
   container.innerHTML = `
     <div class="max-w-3xl mx-auto px-4 py-8 w-full">
-      <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 mb-6 transition-colors">
+      <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 mb-6 transition-colors dark:text-slate-400">
         ← Back to All Tools
       </button>
 
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm dark:bg-slate-900 dark:border-slate-800">
         <div class="mb-6">
-          <span class="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md">Smart PDF Engine</span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Compress PDF Document</h1>
-          <p class="text-sm text-slate-500 mt-1">Shrink heavy PDF files up to 85% with crystal clear text & image quality.</p>
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md dark:bg-rose-950/40">Smart PDF Engine</span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 dark:text-white">Compress PDF Document</h1>
+          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Shrink heavy PDF files up to 85% with crystal clear text & image quality.</p>
         </div>
 
         <div id="dropzone-area"></div>
         <div id="action-area" class="hidden mt-6 space-y-6"></div>
       </div>
+
+      <!-- Blog Article (Clean Background, No Cards) -->
+      <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">PDF Optimization Guide</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Reduce PDF File Size Online Without Losing Text Clarity</h2>
+        </div>
+
+        <div class="space-y-5 text-base leading-relaxed font-medium">
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Official recruitment forms, university submissions, and financial portals often enforce strict file size limits on uploaded PDF documents, frequently capping them at 200KB or 500KB. Scanned marksheets or multi-page certificates created from smartphone photos easily balloon to several megabytes. Compressing a PDF correctly requires stripping redundant code metadata and optimizing embedded page graphics so that textual details remain perfectly legible while file weight drops drastically.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Client-Side PDF Processing vs Cloud Uploads</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Most document management websites require you to upload your private PDF files onto their remote servers for compression. This poses a serious security risk for tax documents, marksheets, and legal IDs. FreeDocTools executes all PDF compression routines directly inside your browser using sandboxed client-side memory, ensuring your confidential files never leave your device.</p>
+        </div>
+      </article>
     </div>
   `;
 
@@ -54,32 +68,32 @@ export function renderPdfCompress(container, onBack) {
 
     actionArea.classList.remove('hidden');
     actionArea.innerHTML = `
-      <div class="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+      <div class="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 dark:bg-slate-800/60 dark:border-slate-800">
         <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-2xl">📄</div>
         <div class="overflow-hidden">
-          <p class="font-semibold text-slate-800 text-sm truncate">${file.name}</p>
-          <p class="text-xs text-slate-500">Original Size: <span class="font-bold text-slate-700">${formatBytes(file.size)}</span></p>
+          <p class="font-semibold text-slate-800 text-sm truncate dark:text-slate-200">${file.name}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Original Size: <span class="font-bold text-slate-700 dark:text-slate-300">${formatBytes(file.size)}</span></p>
         </div>
       </div>
 
       <!-- Compression Level Selection -->
       <div>
-        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Select Compression Level</label>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 dark:text-slate-300">Select Compression Level</label>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           
-          <button type="button" data-mode="recommended" class="mode-btn text-left p-3.5 border-2 border-rose-600 bg-rose-50/70 rounded-2xl transition-all">
-            <span class="block font-bold text-sm text-rose-950">⚡ Recommended (HD)</span>
-            <span class="block text-[11px] text-rose-700 font-medium mt-1">70%–85% Smaller (Clear & Sharp)</span>
+          <button type="button" data-mode="recommended" class="mode-btn text-left p-3.5 border-2 border-rose-600 bg-rose-50/70 rounded-2xl transition-all dark:bg-rose-950/40">
+            <span class="block font-bold text-sm text-rose-950 dark:text-rose-200">⚡ Recommended (HD)</span>
+            <span class="block text-[11px] text-rose-700 dark:text-rose-400 font-medium mt-1">70%–85% Smaller (Clear & Sharp)</span>
           </button>
 
-          <button type="button" data-mode="extreme" class="mode-btn text-left p-3.5 border-2 border-slate-200 bg-white rounded-2xl transition-all hover:border-rose-400">
-            <span class="block font-bold text-sm text-slate-800">🔥 Maximum Small</span>
-            <span class="block text-[11px] text-slate-500 font-medium mt-1">90%+ Smaller (Govt Forms &lt;200KB)</span>
+          <button type="button" data-mode="extreme" class="mode-btn text-left p-3.5 border-2 border-slate-200 bg-white rounded-2xl transition-all hover:border-rose-400 dark:bg-slate-900 dark:border-slate-800">
+            <span class="block font-bold text-sm text-slate-800 dark:text-slate-200">🔥 Maximum Small</span>
+            <span class="block text-[11px] text-slate-500 font-medium mt-1 dark:text-slate-400">90%+ Smaller (Govt Forms &lt;200KB)</span>
           </button>
 
-          <button type="button" data-mode="basic" class="mode-btn text-left p-3.5 border-2 border-slate-200 bg-white rounded-2xl transition-all hover:border-rose-400">
-            <span class="block font-bold text-sm text-slate-800">🔒 Fast Stream Clean</span>
-            <span class="block text-[11px] text-slate-500 font-medium mt-1">Light Metadata & Code Cleanup</span>
+          <button type="button" data-mode="basic" class="mode-btn text-left p-3.5 border-2 border-slate-200 bg-white rounded-2xl transition-all hover:border-rose-400 dark:bg-slate-900 dark:border-slate-800">
+            <span class="block font-bold text-sm text-slate-800 dark:text-slate-200">🔒 Fast Stream Clean</span>
+            <span class="block text-[11px] text-slate-500 font-medium mt-1 dark:text-slate-400">Light Metadata & Code Cleanup</span>
           </button>
 
         </div>
@@ -136,7 +150,6 @@ export function renderPdfCompress(container, onBack) {
           const pdf = await loadingTask.promise;
           const numPages = pdf.numPages;
 
-          // Highly optimized scale & quality parameters
           const scale = selectedMode === 'extreme' ? 0.95 : 1.15;
           const quality = selectedMode === 'extreme' ? 0.50 : 0.70;
 
@@ -186,20 +199,20 @@ export function renderPdfCompress(container, onBack) {
 
         compressResult.classList.remove('hidden');
         compressResult.innerHTML = `
-          <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-4">
+          <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-4 dark:bg-slate-800/60 dark:border-slate-800">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold uppercase text-emerald-800">PDF Successfully Compressed!</span>
+              <span class="text-xs font-extrabold uppercase text-emerald-800 dark:text-emerald-400">PDF Successfully Compressed!</span>
               ${savedPercent > 0 ? `<span class="text-xs font-bold bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded">Reduced by ${savedPercent}%</span>` : ''}
             </div>
 
-            <div class="grid grid-cols-2 gap-3 text-xs bg-white p-3 rounded-xl border border-emerald-100">
+            <div class="grid grid-cols-2 gap-3 text-xs bg-white p-3 rounded-xl border border-emerald-100 dark:bg-slate-900 dark:border-slate-800">
               <div>
                 <p class="text-slate-400 font-semibold">Original Size</p>
-                <p class="text-slate-800 font-bold mt-0.5">${formatBytes(currentFile.size)}</p>
+                <p class="text-slate-800 font-bold mt-0.5 dark:text-slate-200">${formatBytes(currentFile.size)}</p>
               </div>
               <div>
-                <p class="text-emerald-700 font-semibold">Compressed Size</p>
-                <p class="text-emerald-900 font-bold mt-0.5">${formatBytes(compressedBlob.size)}</p>
+                <p class="text-emerald-700 font-semibold dark:text-emerald-400">Compressed Size</p>
+                <p class="text-emerald-900 font-bold mt-0.5 dark:text-emerald-200">${formatBytes(compressedBlob.size)}</p>
               </div>
             </div>
 

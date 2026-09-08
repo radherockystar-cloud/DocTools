@@ -30,6 +30,24 @@ export function renderOcr(container, onBack) {
         <div id="dropzone-area"></div>
         <div id="action-area" class="hidden mt-6 space-y-6"></div>
       </div>
+
+      <!-- Blog Article (Clean Background, No Cards) -->
+      <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Smart OCR Technology Guide</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Extract Editable Text From Scanned Documents and Notebook Photos Instantly</h2>
+        </div>
+
+        <div class="space-y-5 text-base leading-relaxed font-medium">
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Typing out long paragraphs from printed textbook pages, handwritten notes, or scanned agreements is tedious and time-consuming. Optical Character Recognition (OCR) technology automates this entire process by recognizing letter shapes in images and converting them into clean, fully editable text. With interactive lens selection tools, you can touch or click specific words in a photo to copy only the exact paragraphs you need without messy background clutter.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">The Advantage of Interactive Touch Text Selection</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Traditional OCR extractors dump every recognized character into a single unformatted box, forcing you to manually delete headers, page numbers, or image captions. An interactive word-selector overlays precise coordinate boxes over your image, allowing you to pick and choose precise sentences or individual phrases just like highlighting text in a digital document.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">100% Client-Side Privacy for Confidential Notes</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Extracting text from sensitive legal contracts, official letters, or personal notebook entries requires strict privacy. Because all OCR computing runs locally inside your browser memory using advanced WebAssembly packages, your photos are never transmitted or saved on external servers, ensuring complete document security.</p>
+        </div>
+      </article>
     </div>
   `;
 
@@ -88,14 +106,12 @@ export function renderOcr(container, onBack) {
         const ret = await worker.recognize(file);
         await worker.terminate();
 
-        // Filter out solitary symbols and status bar junk
         ocrWords = (ret.data.words || []).filter(w => {
           const t = w.text.trim();
           if (t.length < 2 && !/[0-9a-zA-Z]/.test(t)) return false;
           return true;
         });
 
-        // Pre-select all by default
         ocrWords.forEach((_, idx) => selectedIndices.add(idx));
 
         renderLensWorkspace(resultArea, previewUrl);

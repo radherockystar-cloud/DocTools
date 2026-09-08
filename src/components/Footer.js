@@ -1,8 +1,8 @@
-import { openModal } from './InfoModal.js';
+import { navigate } from '../router.js';
 
 export function renderFooter(container) {
   const footer = document.createElement('footer');
-  footer.className = 'bg-white dark:bg-[#0b0f19] border-t border-rose-100 dark:border-slate-800 py-10 mt-auto transition-colors';
+  footer.className = 'bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-md border-t border-rose-100 dark:border-slate-800 py-10 mt-auto transition-colors';
   footer.innerHTML = `
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -16,13 +16,13 @@ export function renderFooter(container) {
           <p class="text-xs text-slate-500 dark:text-slate-400">100% Free & Private In-Browser Micro Utility Tools.</p>
         </div>
 
-        <!-- Links -->
-        <div class="flex flex-wrap justify-center gap-6 text-xs font-bold text-slate-600 dark:text-slate-300">
-          <button data-footer-action="about" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About</button>
-          <button data-footer-action="privacy" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</button>
-          <button data-footer-action="terms" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms</button>
-          <button data-footer-action="help" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help</button>
-          <button data-footer-action="settings" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Settings</button>
+        <!-- Vertical Stacked Links -->
+        <div class="flex flex-col items-center md:items-start gap-2.5 text-xs font-bold text-slate-600 dark:text-slate-300">
+          <button data-link="/about" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About Us</button>
+          <button data-link="/privacy-policy" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</button>
+          <button data-link="/terms" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms and Conditions</button>
+          <button data-link="/how-to-use" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">How to Use</button>
+          <button data-link="/contact" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help / Contact</button>
         </div>
 
         <!-- Social Icons -->
@@ -60,10 +60,10 @@ export function renderFooter(container) {
 
   container.appendChild(footer);
 
-  footer.querySelectorAll('button[data-footer-action]').forEach(btn => {
+  footer.querySelectorAll('button[data-link]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const action = btn.getAttribute('data-footer-action');
-      openModal(action);
+      const path = btn.getAttribute('data-link');
+      navigate(path);
     });
   });
 }
