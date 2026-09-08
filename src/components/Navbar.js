@@ -30,17 +30,17 @@ export function renderNavbar(container, onHome) {
         </button>
       </div>
 
-      <!-- Center Search Bar -->
-      <div class="flex-1 max-w-md mx-2">
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+      <!-- Center Clean Search Bar -->
+      <div class="flex-1 max-w-sm mx-2">
+        <div class="relative flex items-center">
+          <span class="absolute left-3.5 text-slate-400 text-sm pointer-events-none">
             🔍
           </span>
           <input 
             type="text" 
             id="header-search-input" 
-            placeholder="Search tools (e.g. 20kb, PDF, Resize)..." 
-            class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 rounded-xl border border-rose-200/60 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all"
+            placeholder="" 
+            class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 rounded-2xl border border-rose-200/60 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white dark:focus:bg-slate-900 transition-all shadow-inner"
           />
         </div>
       </div>
@@ -70,7 +70,6 @@ export function renderNavbar(container, onHome) {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 
-  // Search input handler with auto-redirect to home if searching from subpages
   const searchInput = nav.querySelector('#header-search-input');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
