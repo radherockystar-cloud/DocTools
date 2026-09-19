@@ -40,7 +40,7 @@ export function renderBgRemover(container, onBack) {
           <div class="flex items-center gap-4 mb-2">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-white flex items-center justify-center text-2xl shadow-md">🖼️</div>
             <div>
-              <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">AI Background Remover</h1>
+              <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">AI Background Remover & Studio</h1>
               <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Erase any background automatically, then keep it transparent or drop in a new one.</p>
             </div>
           </div>
@@ -49,25 +49,25 @@ export function renderBgRemover(container, onBack) {
           <div id="dropzone-area"></div>
         </div>
 
-        <article class="mt-12 mb-8 space-y-5 text-slate-700 dark:text-slate-300">
+        <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800">
           <div>
-            <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Photo Editing Guide</span>
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How AI Background Removal Actually Works</h2>
+            <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Comprehensive Documentation</span>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Mastering AI Background Removal for Professional Documents and Portals</h2>
           </div>
-          <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            <p>Removing the background from a photo used to mean opening a heavy editor and manually tracing around the subject with a lasso or pen tool — a slow, fiddly process even for someone experienced with photo editing. This tool replaces that entire workflow with a single click. An AI model trained specifically to recognize the boundary between a subject and its surroundings scans the image, works out exactly which pixels belong to the person or object in front, and makes everything else transparent.</p>
+          
+          <div class="space-y-4 text-sm leading-relaxed font-medium">
+            <p>Creating clean, professional identification photographs, product showcases, or graphic design assets often requires isolating a subject from a cluttered background. Traditionally, this procedure demanded complex desktop image-editing software and tedious manual tracing with lasso or pen tools. Our advanced <strong>AI Background Remover & Studio</strong> eliminates this friction completely, utilizing state-of-the-art client-side machine learning models to detect subjects and erase surroundings instantly.</p>
 
-            <h3 class="text-base font-black text-slate-900 dark:text-white pt-2">Why AI Beats Simple Color-Based Removal</h3>
-            <p>Older, simpler background removers work by deleting pixels of a specific color — usually white or green — which only works if your photo happens to have a flat, plain backdrop to begin with. A real photo taken at home, outdoors, or in an office rarely has that. The AI model used here doesn't look at color at all; it recognizes shapes, edges, and the general concept of "a person" or "an object" the same way a human eye instantly separates a subject from its surroundings, regardless of how busy or uneven the background is.</p>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white pt-2">Why Client-Side AI Processing Matters</h3>
+            <p>Privacy and speed are paramount when handling personal photographs, official ID cards, and business graphics. Most online background removal services upload your confidential images to remote cloud servers, posing potential security risks and creating frustrating processing queues. FreeDocTools processes your media locally inside your browser's sandboxed memory via WebAssembly and ONNX runtime environments. Your photos never leave your device.</p>
 
-            <h3 class="text-base font-black text-slate-900 dark:text-white pt-2">Two Ways to Finish Your Photo</h3>
-            <p>Once the background is removed, you have two options. Download it immediately as a transparent PNG — perfect for logos, product listings, or pasting into another design. Or tap Choose Template to drop in a new backdrop: pick from a set of solid colors, gradients, and passport-style backgrounds, or upload any photo of your own from your gallery to use as the new background instead.</p>
-
-            <h3 class="text-base font-black text-slate-900 dark:text-white pt-2">Common Uses</h3>
-            <p>This kind of clean cutout is useful far beyond passport photos. Sellers use it to place products on a plain white or branded background for online listings. Job seekers use it to create a professional-looking profile photo without needing a studio backdrop. Designers use it to quickly source ready-to-use subject cutouts for posters, thumbnails, and social media graphics — all without ever leaving the browser or waiting on a queue for a server to process the image.</p>
-
-            <h3 class="text-base font-black text-slate-900 dark:text-white pt-2">Getting the Cleanest Cutout</h3>
-            <p>Results are sharpest when the subject is clearly in focus and reasonably separated from the background in the original shot — for example, avoid photos where hair or clothing blends into a similarly colored wall. Good, even lighting also helps the model draw a cleaner edge around fine details like hair strands or fingers.</p>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white pt-2">Step-by-Step Guide to Using the Background Studio</h3>
+            <ol class="list-decimal list-inside space-y-2 text-slate-600 dark:text-slate-300 font-semibold pl-2">
+              <li>Upload your photograph using the secure drag-and-drop zone above.</li>
+              <li>Click the <strong class="text-rose-600">"Remove Background Now"</strong> button to trigger the local AI detection engine.</li>
+              <li>Select from a wide range of professional templates (Solid White, Studio Grey, Passport Blue, Corporate Gradients) or upload a custom backdrop from your device.</li>
+              <li>Download your polished studio-quality image instantly as a crisp PNG file.</li>
+            </ol>
           </div>
         </article>
       </div>
@@ -205,7 +205,6 @@ export function renderBgRemover(container, onBack) {
     }
   }
 
-  // "New page" — full template gallery + gallery-upload option
   function renderTemplateGalleryView(previewCanvas, previewCtx) {
     container.innerHTML = `
       <div class="max-w-3xl mx-auto px-4 py-8 w-full">
@@ -274,7 +273,6 @@ export function renderBgRemover(container, onBack) {
   }
 
   function renderWorkspaceViewFromExisting() {
-    // Re-render the workspace but skip straight to the composited result view
     container.innerHTML = `
       <div class="max-w-3xl mx-auto px-4 py-8 w-full">
         <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white mb-6 transition-colors">← Back to All Tools</button>
