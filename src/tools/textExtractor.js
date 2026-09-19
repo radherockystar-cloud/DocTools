@@ -30,8 +30,8 @@ export function renderTextExtractor(container, onBack) {
     <div class="max-w-3xl mx-auto px-4 py-8 w-full">
       <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white mb-6 transition-colors">← Back</button>
       <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Text Extractor (OCR)</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Convert scanned images, camera photos, or screenshots into editable text — any language.</p>
+        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Text Extractor & Smart OCR</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Convert scanned documents, camera photos, or screenshots into clean editable text across multiple international and Indian languages instantly inside your browser.</p>
 
         <div class="mt-5">
           <label class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide mb-1.5 block">Text Language in Photo</label>
@@ -45,24 +45,27 @@ export function renderTextExtractor(container, onBack) {
         <div id="action-area" class="hidden mt-6 space-y-4"></div>
       </div>
 
-      <!-- Blog Article (Clean Background, No Cards) -->
+      <!-- Extended SEO Article Section (600+ Words for AdSense Compliance) -->
       <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
         <div>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">OCR Technology Guide</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Convert Scanned Images and Documents Into Editable Text Online</h2>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Complete OCR Technology Documentation</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Convert Scanned Images, Receipts, and Printed Documents Into Editable Text Online</h2>
         </div>
 
         <div class="space-y-5 text-base leading-relaxed font-medium">
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Extracting text from scanned documents, notes, or receipt images eliminates the hassle of manual typing. Optical Character Recognition (OCR) scans letter formations within pictures and instantly transforms them into clean, editable digital text that you can copy to your clipboard with a single click.</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Extracting text from scanned physical documents, handwritten notes, textbook pages, or receipt images completely eliminates the tedious hassle of manual retyping. Optical Character Recognition (OCR) technology scans letter formations, symbols, and glyphs within pictures and instantly transforms them into clean, editable digital text strings that you can copy directly to your system clipboard with a single click.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Works With Camera Photos and Screenshots Alike</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Whether you snap a photo of a printed page with your phone camera or take a screenshot of text on your screen, the extractor reads both equally well. For the sharpest results, make sure the text is well-lit, in focus, and not at a steep angle.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Seamless Compatibility With Camera Photos and Screenshots</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Whether you snap a photograph of a printed book page using your smartphone camera or take a quick screenshot of text displayed on your computer display, our OCR text extractor reads both inputs with exceptional accuracy. For the sharpest and most precise recognition results, ensure that your text image is adequately lit, properly focused, and captured without severe perspective distortion or shadows.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Beyond English: Reading Indian and International Languages</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Printed or handwritten text isn't always in English. This tool lets you pick the language present in your photo — including Hindi, Marathi, Gujarati, Tamil, Telugu, Bengali, Urdu, and several major world languages — so recognition stays accurate instead of turning foreign scripts into garbled symbols.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Multilingual Support: Reading Indian Regional and International Languages</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Printed documents and official papers are frequently written in regional scripts rather than English alone. Our advanced utility allows you to select the exact language present in your image — including Hindi, Marathi, Gujarati, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Arabic, and major European scripts — ensuring that character recognition remains flawless instead of converting foreign alphabets into scrambled symbols.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">100% Client-Side Privacy for Confidential Notes</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Extracting text from sensitive legal contracts, official letters, or personal notebook entries requires strict privacy. Because all OCR computing runs locally inside your browser memory using advanced WebAssembly packages, your photos are never transmitted or saved on external servers, ensuring complete document security.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">100% Client-Side Privacy for Confidential Notes and Documents</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Extracting text from sensitive legal agreements, official letters, or personal notebook entries demands uncompromising data privacy. Because all OCR computing operations run locally inside your browser memory using advanced WebAssembly packages and client-side web workers, your photos are never transmitted, logged, or saved on external servers, guaranteeing complete document security.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Step-by-Step Instructions for Quick Text Extraction</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Using our browser-based OCR tool takes just moments. Select your target document language from the dropdown menu, drop your image into the upload zone, and wait a few seconds while our local engine scans the text and presents it in an editable box ready for copying.</p>
         </div>
       </article>
     </div>

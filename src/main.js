@@ -11,7 +11,8 @@ import { renderPdfMerge } from './tools/pdfMerge.js';
 import { renderImagesToPdf } from './tools/imagesToPdf.js';
 import { renderPdfSplitter } from './tools/pdfSplitter.js';
 import { renderTextExtractor } from './tools/textExtractor.js';
-import { renderAbout, renderContact, renderPrivacy, renderTerms, renderHowToUseAll } from './pages.js';
+import { renderBgRemover } from './tools/bgRemover.js';
+import { renderAbout, renderContact, renderPrivacy, renderTerms, renderHowToUseAll, renderSecurity } from './pages.js';
 import { getCurrentPath, navigate } from './router.js';
 
 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -92,6 +93,7 @@ document.head.appendChild(customStyles);
 const app = document.getElementById('app');
 
 const TOOLS = [
+  { id: 'bg-remover', title: 'Background Remover & Studio', desc: 'Remove image backgrounds and place them over professional templates.', badge: 'STUDIO', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(244, 63, 94, 0.55);', iconBg: 'background: linear-gradient(135deg, #f43f5e, #be185d);', icon: '🖼️', render: renderBgRemover },
   { id: 'govt-exam-hub', title: 'Govt Exam Portals Hub', desc: 'Direct official links for SSC, UPSC, Banking, NTA & Railway exam applications.', badge: 'PORTALS', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(14, 165, 233, 0.55);', iconBg: 'background: linear-gradient(135deg, #0ea5e9, #2563eb);', icon: '🏛️', render: renderGovtExamHub },
   { id: 'image-compress', title: 'Compress Image Size', desc: 'Reduce photo size to 20KB, 50KB, 100KB for government and exam portals.', badge: 'POPULAR', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(225, 29, 72, 0.55);', iconBg: 'background: linear-gradient(135deg, #ff4b72, #e11d48);', icon: '🗜️', render: renderImageCompress },
   { id: 'image-resize', title: 'Resize Dimensions', desc: 'Set width & height in exact pixels for passport photos & signature crops.', badge: 'UTILITY', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(236, 72, 153, 0.55);', iconBg: 'background: linear-gradient(135deg, #f43f5e, #ec4899);', icon: '📐', render: renderImageResize },
@@ -108,6 +110,7 @@ const STATIC_PAGES = {
   '/contact': renderContact,
   '/privacy-policy': renderPrivacy,
   '/terms': renderTerms,
+  '/security': renderSecurity,
   '/how-to-use': renderHowToUseAll
 };
 
@@ -116,15 +119,26 @@ function renderRoute(path) {
   const footerEl = document.getElementById('app-footer');
   if (!container) return;
   container.innerHTML = '';
-  
+
   const pageRenderer = STATIC_PAGES[path];
   if (pageRenderer) {
     if (footerEl) footerEl.style.display = 'none';
     pageRenderer(container, () => navigate('/'));
-  } else {
-    if (footerEl) footerEl.style.display = 'block';
-    showHome();
+    return;
   }
+
+  if (path.startsWith('/tool-')) {
+    const toolId = path.replace('/tool-', '');
+    const tool = TOOLS.find(t => t.id === toolId);
+    if (tool) {
+      if (footerEl) footerEl.style.display = 'none';
+      tool.render(container, () => navigate('/'));
+      return;
+    }
+  }
+
+  if (footerEl) footerEl.style.display = 'block';
+  showHome();
 }
 
 function initApp() {
@@ -147,7 +161,6 @@ function initApp() {
     renderRoute(e.detail.path);
   });
 
-  // Global listener for live searching tools
   window.addEventListener('filter-tools', (e) => {
     const query = (e.detail && e.detail.query) ? e.detail.query.toLowerCase() : '';
     const toolCards = document.querySelectorAll('.tool-3d-card');
@@ -182,6 +195,11 @@ function showHome() {
         <p class="mt-3.5 text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto font-medium">
           Fast client-side utility suite to compress, resize, extract text, and convert documents for government exams and daily work.
         </p>
+
+        <!-- Header Chhota Article (~100 Words) -->
+        <div class="mt-6 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl border border-rose-100 dark:border-slate-700/80 text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed max-w-2xl mx-auto shadow-sm">
+          Welcome to FreeDocTools, India's most secure and lightning-fast client-side utility platform. Whether you are preparing passport photographs for SSC and UPSC examinations, compressing heavy PDF marksheets under strict portal KB limits, removing image backgrounds, or extracting editable text via OCR, our browser-based studio ensures total data privacy with zero server uploads.
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="tools-grid"></div>
@@ -207,26 +225,26 @@ function showHome() {
         </div>
       </div>
 
-      <!-- Professional AdSense-Friendly SEO Article Section (Clean Background, No Cards) -->
-      <div class="mt-20 pt-16 border-t border-rose-200/60 dark:border-slate-800 max-w-4xl mx-auto space-y-8 text-slate-700 dark:text-slate-300">
+      <!-- Footer Vistrit SEO Article (800+ Words for AdSense Compliance) -->
+      <article class="mt-20 pt-16 border-t border-rose-200/60 dark:border-slate-800 max-w-4xl mx-auto space-y-8 text-slate-700 dark:text-slate-300">
         <div>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Official Guide & Documentation</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Complete Guide to Online Document Management & Form Preparation</h2>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Comprehensive Platform Documentation & User Guide</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">The Ultimate Guide to Secure Browser-Based Document Management and Government Form Preparation</h2>
         </div>
 
         <div class="space-y-6 text-base leading-relaxed font-medium">
-          <p>Welcome to <strong>FreeDocTools</strong>, your ultimate browser-based document utility suite designed specifically for students, job aspirants, and professionals across India. Navigating government recruitment portals, bank exam applications, and university admissions often requires uploading photographs, signatures, and certificates in strict digital formats. Understanding how file compression, pixel dimension scaling, and secure format conversion work can save you from application rejections.</p>
+          <p>Navigating online recruitment applications, university entrance admissions, banking recruitment drives, and professional certification forms across India often presents unexpected technical hurdles. Millions of job aspirants and students struggle daily with strict digital document requirements—such as shrinking passport size photographs precisely below 20KB or 50KB, formatting signatures under 10KB, scaling exact pixel dimensions, converting image formats between JPEG and PNG, merging multi-page academic marksheets into unified PDF bundles, and extracting editable text from scanned documents via optical character recognition. FreeDocTools has been engineered from the ground up to solve these exact everyday challenges instantly, securely, and completely free of charge.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">Why Proper Image Compression Matters for Govt Exams</h3>
-          <p>Most official application systems—such as SSC CGL, UPSC Civil Services, IBPS Banking, and Railway recruitment boards—impose strict file size limits, typically ranging between 20KB to 50KB for passport photos and 10KB to 20KB for signatures. Smartphones today capture high-resolution photographs weighing several megabytes (3MB to 8MB). Simply shrinking dimensions randomly can blur vital facial features or text. Our client-side compression algorithm intelligently reduces file weight while preserving high edge sharpness so your documents pass automated scrutiny without hassle.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">Why Proper Image Compression and Sizing Matters for Competitive Exams</h3>
+          <p>Government examination bodies—including the Staff Selection Commission (SSC CGL, CHSL, MTS), Union Public Service Commission (UPSC Civil Services), Institute of Banking Personnel Selection (IBPS PO, Clerk), National Testing Agency (NTA NEET, JEE, CUET), and Railway Recruitment Boards (RRB NTPC)—enforce rigorous guidelines regarding uploaded applicant credentials. A high-resolution smartphone camera captures pictures weighing several megabytes containing dense color pixels. When automated portal software checks these uploads, oversized files or blurry pixel dimensions trigger immediate disqualification or form rejection alerts. Our advanced client-side compression algorithms intelligently reduce file weight while preserving high edge clarity, ensuring your passport photographs and digital signatures pass automated scrutiny without hassle.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">The Security Advantage of Client-Side Processing</h3>
-          <p>Traditional online tools upload your personal identification cards, marksheets, and tax forms to remote cloud servers, posing significant privacy risks. FreeDocTools eliminates this risk entirely. Powered by modern HTML5 Canvas, WebAssembly, and secure web APIs, every task—whether it is merging multi-page PDFs, splitting documents, or running optical character recognition (OCR)—executes directly inside your browser's sandboxed local memory. Your private documents never touch an external server.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">Uncompromising Data Privacy Through Client-Side Architecture</h3>
+          <p>A major concern when utilizing online utility websites involves the safety and confidentiality of personal identification documents, PAN cards, Aadhaar details, financial statements, and academic marksheets. Conventional web services operate on remote cloud infrastructure, meaning every file you select is uploaded across the public internet to an external server where third parties can theoretically log or store your records. FreeDocTools discards this vulnerable cloud model entirely. Powered by modern HTML5 Canvas APIs, WebAssembly, and secure client-side scripting environments, every single operation—whether compressing documents, splitting multi-page PDFs, or running smart OCR text recognition—executes locally inside your browser's sandboxed memory. Your private paperwork never leaves your device and is wiped automatically the moment you close your tab.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">Streamlining Your Daily Workflow</h3>
-          <p>Whether you need to convert high-res PNG scans into lightweight WebP formats, merge scattered PDF marksheets into a single file for college applications, or extract editable text from scanned textbook pages using our smart OCR lens, FreeDocTools provides instant, friction-free performance across all mobile and desktop devices.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-2">Streamlining Your Daily Academic and Professional Workflow</h3>
+          <p>Beyond government exam form preparation, modern students and office professionals deal with constant document conversions. Converting PNG scans into lightweight WebP formats for faster loading, merging scattered semester marksheets into a single cohesive document, or extracting text notes from notebook snapshots becomes completely effortless. FreeDocTools provides instantaneous, friction-free performance optimized for all mobile smartphones, tablets, and desktop computers alike, ensuring you can manage your paperwork anywhere, anytime.</p>
         </div>
-      </div>
+      </article>
 
     </div>
   `;
@@ -257,9 +275,7 @@ function showHome() {
     `;
 
     card.addEventListener('click', () => {
-      container.innerHTML = '';
       navigate('/tool-' + tool.id);
-      tool.render(container, () => navigate('/'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 

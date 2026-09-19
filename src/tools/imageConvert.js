@@ -12,25 +12,35 @@ export function renderImageConvert(container, onBack) {
       <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm dark:bg-slate-900 dark:border-slate-800">
         <div class="mb-6">
           <span class="text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md dark:bg-purple-950/40">Smart Format Engine</span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 dark:text-white">Convert Image Format</h1>
-          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Convert between JPG, PNG & WebP with optimal balance of HD sharpness & small size.</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 dark:text-white">Convert Image Format & Format Studio</h1>
+          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Convert between JPG, PNG, and WebP image formats instantly inside your browser with an optimal balance of HD sharpness and small file size.</p>
         </div>
 
         <div id="dropzone-area"></div>
         <div id="action-area" class="hidden mt-6 space-y-6"></div>
       </div>
 
-      <!-- Blog Article (Clean Background, No Cards) -->
+      <!-- Extended SEO Article Section (700+ Words for AdSense Compliance) -->
       <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
         <div>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">Format Guide & Comparison</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">JPG vs PNG vs WEBP: Which Format Should You Use?</h2>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-purple-600 dark:text-purple-400 bg-purple-100/60 dark:bg-purple-950/60 px-3 py-1 rounded-md inline-block mb-3">Complete Image Format Documentation & Comparison Guide</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">JPG vs PNG vs WEBP: Which Image File Format Should You Choose for Government Exams and Web Uploads?</h2>
         </div>
 
         <div class="space-y-5 text-base leading-relaxed font-medium">
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Choosing the right image format matters more than most people realize. JPG is the safest choice for photographs and almost all exam or job application forms, since it compresses well and is universally accepted. PNG is lossless, making it ideal for signatures, logos, or screenshots with sharp text and transparent backgrounds, but it produces much larger files for photos. WEBP is the modern middle ground — it often achieves the smallest file size of the three while keeping visual quality close to the original, making it great for websites, though some older government portals may not accept it.</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Choosing the correct image file format matters far more than most digital users and job applicants realize. Selecting an incompatible format or failing to meet strict portal specifications can lead to automated upload rejections on government recruitment boards, university admission portals, and banking application systems. Understanding the structural differences between standard image formats like JPEG, PNG, and WEBP ensures your documents are accepted immediately without formatting errors.</p>
 
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">If a form specifically asks for JPG, always convert to JPG even if your original file is PNG or WEBP. For anything involving a signature or a logo with flat colors, PNG preserves the crisp edges better. When in doubt and the platform accepts it, WEBP gives you the best balance of quality and small size.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">The Role of JPEG (JPG) in Official Government and Exam Forms</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">JPEG is universally recognized as the absolute safest and most compatible format for passport-size photographs, signature crops, and scanned certificates. Almost every legacy and modern government application portal — including SSC, UPSC, IBPS, NTA, and railway boards — explicitly mandates JPEG or JPG extensions. JPEG utilizes lossy compression algorithms to discard invisible color details, allowing file sizes to shrink significantly while preserving clear visual features necessary for identity verification.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">When to Use PNG: Lossless Quality and Transparent Backgrounds</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Unlike JPEG, the Portable Network Graphics (PNG) format employs lossless compression, meaning no pixel data or visual clarity is ever discarded during encoding. This makes PNG the superior choice for digital signatures, company logos, graphical watermarks, and high-resolution interface screenshots containing sharp text and fine linework. However, because PNG files retain all raw image data, their file sizes are considerably larger, which can occasionally trigger upload warnings on portals with tight KB restrictions.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">WEBP: The Modern Web-Optimized Standard</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Developed by Google, WEBP represents the modern middle ground of image compression technology. It consistently achieves substantially smaller file sizes than both JPEG and PNG while maintaining equivalent or superior visual sharpness. While WEBP is widely used across modern web browsers and content management platforms for fast loading speeds, applicants must exercise caution when submitting forms to older government websites that may not yet support the format.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Absolute Security Through Client-Side Conversion</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Converting personal photos, identity cards, and signature scans online typically raises serious security concerns regarding cloud storage and data leakage. FreeDocTools executes all image conversion operations completely inside your browser using sandboxed HTML5 Canvas APIs, ensuring your files never leave your device.</p>
         </div>
       </article>
     </div>

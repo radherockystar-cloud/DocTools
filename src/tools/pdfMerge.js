@@ -14,28 +14,31 @@ export function renderPdfMerge(container, onBack) {
         <div class="mb-6">
           <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md dark:bg-amber-950/40">PDF Utility</span>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 dark:text-white">Merge Multiple PDFs</h1>
-          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Combine two or more PDF files into a single document in seconds.</p>
+          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Combine two or more separate PDF files into a single unified document securely inside your browser in seconds.</p>
         </div>
 
         <div id="dropzone-area"></div>
         <div id="action-area" class="hidden mt-6 space-y-4"></div>
       </div>
 
-      <!-- Blog Article (Clean Background, No Cards) -->
+      <!-- Extended SEO Article Section (600+ Words for AdSense Compliance) -->
       <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
         <div>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400 bg-rose-100/60 dark:bg-rose-950/60 px-3 py-1 rounded-md inline-block mb-3">PDF Management Guide</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Combine Multiple PDF Files and Marksheets Into a Single Document</h2>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-amber-600 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/60 px-3 py-1 rounded-md inline-block mb-3">Complete PDF Management Documentation</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">How to Seamlessly Combine Multiple PDF Files and Marksheets Into a Single Unified Document</h2>
         </div>
 
         <div class="space-y-5 text-base leading-relaxed font-medium">
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">When applying for higher education admissions, government jobs, or professional certifications, candidates are frequently required to upload all academic marksheets, degree certificates, and identity proofs as a single unified PDF file rather than multiple separate attachments. Merging scattered files together keeps your application organized and ensures automated portal checkers evaluate your complete document set without throwing missing file errors.</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">When applying for higher education university admissions, competitive government recruitment jobs, or professional certifications, candidates are frequently required by official portals to upload all academic marksheets, passing degree certificates, category proofs, and identity documents as a single unified PDF file rather than multiple separate attachments. Merging scattered files together into one clean package keeps your online job application organized, prevents upload errors, and ensures automated recruitment portal checkers evaluate your complete document set without throwing missing file warnings.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Maintaining Sequence and Page Order</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">A major challenge when joining PDFs is ensuring pages appear in the correct chronological or logical order — such as placing 10th marksheet first, followed by 12th marksheet and graduation certificates. A reliable browser-based merger lets you track and review your selected files instantly before stitching them together.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Maintaining Proper Page Sequence and Chronological Order</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">A major challenge when joining multiple portable document format files is ensuring individual pages appear in the correct chronological or logical order — such as placing high school 10th marksheets first, followed by intermediate 12th marksheets, graduation transcripts, and specialized professional certificates. A reliable browser-based PDF merger lets you track, manage, and review your selected document files instantly before stitching them together into a final sequence.</p>
 
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Client-Side Privacy Protection</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Because marksheets and identity cards contain private personal data, uploading them to third-party web servers introduces security risks. FreeDocTools executes all document merging operations locally inside your browser memory using robust client-side libraries, guaranteeing complete confidentiality.</p>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Absolute Privacy and Security Through Client-Side Execution</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Because academic marksheets, financial statements, and government identity cards contain highly private personal data, uploading them to third-party web cloud servers for merging introduces severe security and data privacy risks. FreeDocTools executes all document merging operations locally inside your browser memory using robust client-side script libraries, guaranteeing complete confidentiality and ensuring your sensitive paperwork never touches an external server.</p>
+
+          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Step-by-Step Instructions for Instant PDF Merging</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Combining your PDFs on FreeDocTools requires zero technical configuration or third-party software installation. Simply drag and drop two or more PDF files into the upload dropzone. The utility lists each added file in sequence with clear file size readouts. Click the merge button to execute the operation instantly, and download your unified document file ready for official submission.</p>
         </div>
       </article>
     </div>
