@@ -45,7 +45,7 @@ export function renderNavbar(container, onHome) {
           <input
             type="text"
             id="header-search-input"
-            placeholder=""
+            placeholder="Search tools..."
             class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100/80 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 rounded-2xl border border-rose-200/60 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white dark:focus:bg-slate-900 transition-all shadow-inner"
           />
         </div>
@@ -64,7 +64,10 @@ export function renderNavbar(container, onHome) {
   `;
 
   container.appendChild(nav);
-  nav.querySelector('#nav-brand').addEventListener('click', onHome);
+  nav.querySelector('#nav-brand').addEventListener('click', () => {
+    navigate('/');
+    if (onHome) onHome();
+  });
 
   nav.querySelector('#btn-quick-theme').addEventListener('click', () => {
     const isDark = document.documentElement.classList.toggle('dark');
@@ -130,7 +133,7 @@ export function renderNavbar(container, onHome) {
   });
 
   const drawerPanel = overlay.querySelector('#drawer-panel');
-  const backdrop = overlay.querySelector('#drawer-backdrop');
+    const backdrop = overlay.querySelector('#drawer-backdrop');
   let isDrawerVisible = false;
 
   function showDrawerUI() {
@@ -187,10 +190,12 @@ export function renderNavbar(container, onHome) {
 
       if (action === 'home') {
         navigate('/');
-        onHome();
+        if (onHome) onHome();
       } else {
         const path = ROUTE_MAP[action];
-        if (path) navigate(path);
+        if (path) {
+          navigate(path);
+        }
       }
     });
   });

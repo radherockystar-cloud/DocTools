@@ -1,32 +1,27 @@
-const historyStack = [window.location.pathname];
-
+// Multi-page navigation helper for MPA architecture
 export function navigate(path, push = true) {
-  if (window.location.pathname !== path) {
-    if (push) {
-      window.history.pushState({ path }, '', path);
-      historyStack.push(path);
-    } else {
-      window.history.replaceState({ path }, '', path);
-      if (historyStack.length > 0) {
-        historyStack[historyStack.length - 1] = path;
-      } else {
-        historyStack.push(path);
-      }
-    }
+  // Map clean routes to actual HTML files for multi-page build
+  const routeMap = {
+    '/': '/index.html',
+    '/about': '/about.html',
+    '/privacy-policy': '/privacy-policy.html',
+    '/terms': '/terms.html',
+    '/contact': '/contact.html',
+    '/security': '/security.html',
+    '/how-to-use': '/how-to-use.html'
+  };
+
+  let targetPath = routeMap[path] || path;
+  
+  if (path.startsWith('/tool-')) {
+    targetPath = `/${path}.html`;
   }
-  window.dispatchEvent(new CustomEvent('route-change', { detail: { path } }));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (window.location.pathname !== targetPath && window.location.pathname !== path) {
+    window.location.href = path; // Real multi-page navigation for SEO crawlers
+  }
 }
 
 export function getCurrentPath() {
   return window.location.pathname;
 }
-
-window.addEventListener('popstate', (e) => {
-  const path = window.location.pathname;
-  if (historyStack.length > 1) {
-    historyStack.pop();
-  }
-  window.dispatchEvent(new CustomEvent('route-change', { detail: { path } }));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});

@@ -16,13 +16,13 @@ export function renderFooter(container) {
           <p class="text-xs text-slate-500 dark:text-slate-400">100% Free & Private In-Browser Micro Utility Tools.</p>
         </div>
 
-        <!-- Vertical Stacked Links -->
+        <!-- Vertical Stacked Links - Direct HTML Anchors for SEO Crawler -->
         <div class="flex flex-col items-center md:items-start gap-2.5 text-xs font-bold text-slate-600 dark:text-slate-300">
-          <button data-link="/about" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About Us</button>
-          <button data-link="/privacy-policy" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</button>
-          <button data-link="/terms" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms and Conditions</button>
-          <button data-link="/how-to-use" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">How to Use</button>
-          <button data-link="/contact" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help / Contact</button>
+          <a href="/about.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About Us</a>
+          <a href="/privacy-policy.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</a>
+          <a href="/terms.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms and Conditions</a>
+          <a href="/how-to-use.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">How to Use</a>
+          <a href="/contact.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help / Contact</a>
         </div>
 
         <!-- Social Icons -->
@@ -59,11 +59,4 @@ export function renderFooter(container) {
   `;
 
   container.appendChild(footer);
-
-  footer.querySelectorAll('button[data-link]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const path = btn.getAttribute('data-link');
-      navigate(path);
-    });
-  });
 }
