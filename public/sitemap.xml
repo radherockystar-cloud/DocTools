@@ -2,9 +2,95 @@
 <?xml-stylesheet type="text/css" href="https://www.xml-sitemaps.com/css/sitemap.css"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
+  <!-- Home Page -->
   <url>
-       <loc>https://www.freedoctools.online/</loc>
-       <lastmod>2026-09-10T02:54:34+00:00</lastmod>
+       <loc>https://freedoctools.online/</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
        <priority>1.0000</priority>
   </url>
+
+  <!-- Interactive Tools Pages -->
+  <url>
+       <loc>https://freedoctools.online/tool-bg-remover</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.9000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-govt-exam-hub</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.9000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-image-compress</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-image-resize</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-image-convert</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-pdf-compress</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-pdf-merge</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-images-to-pdf</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-pdf-splitter</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/tool-text-extractor</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.8500</priority>
+  </url>
+
+  <!-- Static Information & Legal Pages -->
+  <url>
+       <loc>https://freedoctools.online/about.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.6000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/privacy-policy.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.6000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/terms.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.6000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/security.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.6000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/contact.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.6000</priority>
+  </url>
+  <url>
+       <loc>https://freedoctools.online/how-to-use.html</loc>
+       <lastmod>2026-10-03T00:00:00+00:00</lastmod>
+       <priority>0.7000</priority>
+  </url>
+
 </urlset>
