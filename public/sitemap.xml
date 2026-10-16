@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://freedoctools.online/</loc></url>
+  <url><loc>https://freedoctools.online/bg-remover</loc></url>
   <url><loc>https://freedoctools.online/image-compress</loc></url>
+  <url><loc>https://freedoctools.online/text-extractor</loc></url>
   <url><loc>https://freedoctools.online/about</loc></url>
   <url><loc>https://freedoctools.online/how-to-use</loc></url>
   <url><loc>https://freedoctools.online/privacy-policy</loc></url>

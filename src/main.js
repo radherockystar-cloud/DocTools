@@ -1,6 +1,5 @@
 import { inject } from '@vercel/analytics';
 inject();
-import { renderGovtExamHub } from './tools/govtExamHub.js';
 import { renderNavbar } from './components/Navbar.js';
 import { renderFooter } from './components/Footer.js';
 import { renderImageCompress } from './tools/imageCompress.js';
@@ -94,7 +93,6 @@ const app = document.getElementById('app');
 
 const TOOLS = [
   { id: 'bg-remover', title: 'Background Remover & Studio', desc: 'Remove image backgrounds and place them over professional templates.', badge: 'STUDIO', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(244, 63, 94, 0.55);', iconBg: 'background: linear-gradient(135deg, #f43f5e, #be185d);', icon: '🖼️', render: renderBgRemover },
-  { id: 'govt-exam-hub', title: 'Govt Exam Portals Hub', desc: 'Direct official links for SSC, UPSC, Banking, NTA & Railway exam applications.', badge: 'PORTALS', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(14, 165, 233, 0.55);', iconBg: 'background: linear-gradient(135deg, #0ea5e9, #2563eb);', icon: '🏛️', render: renderGovtExamHub },
   { id: 'image-compress', title: 'Compress Image Size', desc: 'Reduce photo size to 20KB, 50KB, 100KB for government and exam portals.', badge: 'POPULAR', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(225, 29, 72, 0.55);', iconBg: 'background: linear-gradient(135deg, #ff4b72, #e11d48);', icon: '🗜️', render: renderImageCompress },
   { id: 'image-resize', title: 'Resize Dimensions', desc: 'Set width & height in exact pixels for passport photos & signature crops.', badge: 'UTILITY', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(236, 72, 153, 0.55);', iconBg: 'background: linear-gradient(135deg, #f43f5e, #ec4899);', icon: '📐', render: renderImageResize },
   { id: 'image-convert', title: 'Convert Image Format', desc: 'Convert pictures between JPG, PNG, and WebP formats at zero quality loss.', badge: 'FAST', iconShadow: 'box-shadow: 0 12px 26px -4px rgba(217, 70, 239, 0.55);', iconBg: 'background: linear-gradient(135deg, #db2777, #c026d3);', icon: '🔄', render: renderImageConvert },

@@ -5,7 +5,10 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/tool-image-compress", "destination": "/image-compress", "permanent": true }
+    { "source": "/tool-bg-remover", "destination": "/bg-remover", "permanent": true },
+    { "source": "/tool-image-compress", "destination": "/image-compress", "permanent": true },
+    { "source": "/tool-text-extractor", "destination": "/text-extractor", "permanent": true },
+    { "source": "/tool-govt-exam-hub", "destination": "/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }

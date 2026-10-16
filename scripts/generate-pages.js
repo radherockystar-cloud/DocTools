@@ -17,8 +17,20 @@ const ADSENSE_CLIENT = 'ca-pub-2559829612823624';
 // Only tools listed here get a static page. Add the next tool here when its file is updated.
 const TOOLS = [
   {
+    slug: 'bg-remover',
+    name: 'Background Remover',
+    blurb: 'Remove the background from a photo with an in-browser AI model, then keep it transparent or pick a new one.',
+    title: 'Free Background Remover – Remove Image Background Online | FreeDocTools',
+    description:
+      'Remove the background from a photo for free. Keep it transparent or switch to white, passport blue or a studio colour. Runs in your browser, no signup.',
+    h1: 'Free Background Remover',
+    intro:
+      'Upload a photo and an AI model running in your browser cuts out the subject. Then keep it transparent or choose a new background. Your photo is not uploaded.',
+  },
+  {
     slug: 'image-compress',
     name: 'Compress Image',
+    blurb: 'Reduce a photo to an exact size such as 20KB, 50KB or 100KB for forms and portals.',
     title: 'Compress Image to 20KB, 50KB, 100KB – Free Online | FreeDocTools',
     description:
       'Compress a JPG or PNG photo to an exact size like 20KB, 50KB or 100KB for exam and job forms. Free, no signup, and your photo never leaves your device.',
@@ -26,17 +38,63 @@ const TOOLS = [
     intro:
       'Pick a target size, upload your photo and get a sharp JPG that fits the form limit. Everything runs in your browser, so your photo is never uploaded.',
   },
+  {
+    slug: 'text-extractor',
+    name: 'Extract Text (OCR)',
+    blurb: 'Turn a photo or screenshot of printed text into editable text in English, Hindi and 18 other languages.',
+    title: 'Image to Text Converter (OCR) – English, Hindi & More | FreeDocTools',
+    description:
+      'Extract text from a photo, scan or screenshot for free. OCR supports English, Hindi and 18 other languages and runs in your browser, with no signup.',
+    h1: 'Image to Text Converter (OCR)',
+    intro:
+      'Choose the language of the text, upload an image and copy the extracted text. The image is processed in your browser and is not uploaded.',
+  },
 ];
 
-// Hand-written pages that already exist in the project root (clean URLs, no .html).
-const STATIC_PAGES = [
-  ['/about', 'About Us'],
-  ['/how-to-use', 'How to Use'],
-  ['/privacy-policy', 'Privacy Policy'],
-  ['/terms', 'Terms & Conditions'],
-  ['/security', 'Security'],
-  ['/contact', 'Contact'],
+// Pages written from content/pages/<slug>.html. {{TOOLS_LIST}} inside them becomes a list of tool links.
+const PAGES = [
+  {
+    slug: 'about',
+    name: 'About Us',
+    title: 'About FreeDocTools – Free Image & PDF Tools in Your Browser',
+    description:
+      'FreeDocTools offers free image and PDF tools that run in your browser. Learn who builds it, how it works and how it is paid for.',
+    h1: 'About FreeDocTools',
+  },
+  {
+    slug: 'privacy-policy',
+    name: 'Privacy Policy',
+    title: 'Privacy Policy | FreeDocTools',
+    description:
+      'How FreeDocTools handles your files, analytics, cookies and Google AdSense advertising. Your files are processed in your browser and are not uploaded.',
+    h1: 'Privacy Policy',
+  },
+  {
+    slug: 'terms',
+    name: 'Terms & Conditions',
+    title: 'Terms and Conditions | FreeDocTools',
+    description: 'The terms for using the free tools and content on FreeDocTools.',
+    h1: 'Terms and Conditions',
+  },
+  {
+    slug: 'security',
+    name: 'Security',
+    title: 'Security and Data Handling | FreeDocTools',
+    description:
+      'What runs in your browser, what is downloaded, and what you can do to keep your documents safe when using FreeDocTools.',
+    h1: 'Security and Data Handling',
+  },
+  {
+    slug: 'contact',
+    name: 'Contact',
+    title: 'Contact FreeDocTools – Help and Feedback',
+    description: 'Get help with a tool, report a bug or send feedback to the FreeDocTools team.',
+    h1: 'Contact and Help',
+  },
 ];
+
+// Pages that already exist as hand-written files in the project root.
+const HAND_WRITTEN = [['/how-to-use', 'How to Use']];
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -56,6 +114,8 @@ const STYLE = `
   html.dark .article h2, html.dark .article h3, html.dark .article summary { color: #ffffff; }
   html.dark .article details { border-color: #334155; }
 `;
+
+const ALL_PAGE_LINKS = [['/about', 'About Us'], ...HAND_WRITTEN, ['/privacy-policy', 'Privacy Policy'], ['/terms', 'Terms & Conditions'], ['/security', 'Security'], ['/contact', 'Contact']];
 
 function header() {
   return `
@@ -77,7 +137,7 @@ function header() {
 
 function footer() {
   const toolLinks = TOOLS.map((t) => `<li><a href="/${t.slug}" class="hover:text-rose-600">${esc(t.name)}</a></li>`).join('');
-  const pageLinks = STATIC_PAGES.map(([href, label]) => `<li><a href="${href}" class="hover:text-rose-600">${esc(label)}</a></li>`).join('');
+  const pageLinks = ALL_PAGE_LINKS.map(([href, label]) => `<li><a href="${href}" class="hover:text-rose-600">${esc(label)}</a></li>`).join('');
   return `
     <footer class="mt-12 border-t border-rose-100 bg-white/80 py-10 dark:border-slate-800 dark:bg-slate-900/80">
       <div class="mx-auto grid max-w-6xl gap-8 px-4 text-sm font-semibold text-slate-600 dark:text-slate-300 sm:grid-cols-3">
@@ -99,13 +159,17 @@ function footer() {
 }
 
 function toolPage(tool) {
-  const fragmentPath = resolve(ROOT, 'content', `${tool.slug}.html`);
-  if (!existsSync(fragmentPath)) {
-    throw new Error(`Missing content file: content/${tool.slug}.html (a tool page must not be published without real text)`);
+  const isStatic = Boolean(tool.__static);
+  let article = tool.__article;
+  if (!isStatic) {
+    const fragmentPath = resolve(ROOT, 'content', `${tool.slug}.html`);
+    if (!existsSync(fragmentPath)) {
+      throw new Error(`Missing content file: content/${tool.slug}.html (a tool page must not be published without real text)`);
+    }
+    article = readFileSync(fragmentPath, 'utf8');
   }
-  const article = readFileSync(fragmentPath, 'utf8');
   const url = `${SITE}/${tool.slug}`;
-  const others = TOOLS.filter((t) => t.slug !== tool.slug);
+  const others = isStatic ? [] : TOOLS.filter((t) => t.slug !== tool.slug);
   const related = others.length
     ? `<section class="mt-12"><h2 class="mb-3 text-xl font-black text-slate-900 dark:text-white">More free tools</h2><ul class="grid gap-2 sm:grid-cols-2">${others
         .map((t) => `<li><a class="font-bold text-rose-600 underline" href="/${t.slug}">${esc(t.name)}</a></li>`)
@@ -113,7 +177,7 @@ function toolPage(tool) {
     : '';
 
   return `<!DOCTYPE html>
-<!-- AUTO-GENERATED by scripts/generate-pages.js. Edit content/${tool.slug}.html or the script, not this file. -->
+<!-- AUTO-GENERATED by scripts/generate-pages.js. Edit the file in content/ or the script, not this file. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -156,13 +220,13 @@ function toolPage(tool) {
       </nav>
 
       <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">${esc(tool.h1)}</h1>
-      <p class="mb-6 mt-2 text-base font-medium text-slate-600 dark:text-slate-300">${esc(tool.intro)}</p>
+      ${isStatic ? '' : `<p class="mb-6 mt-2 text-base font-medium text-slate-600 dark:text-slate-300">${esc(tool.intro)}</p>
 
       <section id="tool-root" data-tool="${tool.slug}" aria-label="${esc(tool.name)} tool">
         <noscript><p>Please enable JavaScript to use this tool.</p></noscript>
-      </section>
+      </section>`}
 
-      <article class="article mt-12">
+      <article class="article ${isStatic ? 'mt-6' : 'mt-12'}">
 ${article}
       </article>
       ${related}
@@ -171,14 +235,25 @@ ${article}
     ${footer()}
 
     <script>document.getElementById('theme-toggle').addEventListener('click',function(){var d=document.documentElement.classList.toggle('dark');try{localStorage.setItem('theme',d?'dark':'light')}catch(e){}});</script>
-    <script type="module" src="/src/tool-page.js"></script>
+    ${isStatic ? '' : '<script type="module" src="/src/tool-page.js"></script>'}
   </body>
 </html>
 `;
 }
 
+
+function staticPage(page) {
+  const fragmentPath = resolve(ROOT, 'content', 'pages', `${page.slug}.html`);
+  if (!existsSync(fragmentPath)) throw new Error(`Missing content file: content/pages/${page.slug}.html`);
+  const toolsList = `<ul>${TOOLS.map((t) => `<li><a href="/${t.slug}">${esc(t.name)}</a>: ${esc(t.blurb)}</li>`).join('')}</ul>`;
+  const article = readFileSync(fragmentPath, 'utf8').replace('{{TOOLS_LIST}}', toolsList);
+  const url = `${SITE}/${page.slug}`;
+  const html = toolPage({ ...page, intro: '', name: page.name, __static: true, __article: article, __url: url });
+  return html;
+}
+
 function sitemap() {
-  const urls = ['/', ...TOOLS.map((t) => `/${t.slug}`), ...STATIC_PAGES.map(([href]) => href)];
+  const urls = ['/', ...TOOLS.map((t) => `/${t.slug}`), ...ALL_PAGE_LINKS.map(([href]) => href)];
   const body = urls.map((u) => `  <url><loc>${SITE}${u === '/' ? '/' : u}</loc></url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
@@ -186,5 +261,8 @@ function sitemap() {
 for (const tool of TOOLS) {
   writeFileSync(resolve(ROOT, `${tool.slug}.html`), toolPage(tool));
 }
+for (const page of PAGES) {
+  writeFileSync(resolve(ROOT, `${page.slug}.html`), staticPage(page));
+}
 writeFileSync(resolve(ROOT, 'public', 'sitemap.xml'), sitemap());
-console.log(`Generated ${TOOLS.length} tool page(s) and public/sitemap.xml`);
+console.log(`Generated ${TOOLS.length} tool page(s), ${PAGES.length} info page(s) and public/sitemap.xml`);
