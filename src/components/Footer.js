@@ -18,11 +18,11 @@ export function renderFooter(container) {
 
         <!-- Vertical Stacked Links - Direct HTML Anchors for SEO Crawler -->
         <div class="flex flex-col items-center md:items-start gap-2.5 text-xs font-bold text-slate-600 dark:text-slate-300">
-          <a href="/about.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About Us</a>
-          <a href="/privacy-policy.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</a>
-          <a href="/terms.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms and Conditions</a>
-          <a href="/how-to-use.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">How to Use</a>
-          <a href="/contact.html" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help / Contact</a>
+          <a href="/about" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">About Us</a>
+          <a href="/privacy-policy" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy Policy</a>
+          <a href="/terms" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Terms and Conditions</a>
+          <a href="/how-to-use" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">How to Use</a>
+          <a href="/contact" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Help / Contact</a>
         </div>
 
         <!-- Social Icons -->

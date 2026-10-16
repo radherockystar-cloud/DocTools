@@ -1,19 +1,37 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { readdirSync, existsSync } from 'node:fs';
+
+const root = fileURLToPath(new URL('.', import.meta.url));
+
+// Every *.html file in the project root becomes a page (index, about, tool pages...).
+// Tool pages are created by scripts/generate-pages.js, so nothing needs to be added here by hand.
+const input = Object.fromEntries(
+  readdirSync(root)
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => [f.replace(/\.html$/, ''), resolve(root, f)])
+);
+
+// Dev server only: let /about open about.html, like Vercel cleanUrls does in production.
+function cleanUrlsDev() {
+  return {
+    name: 'clean-urls-dev',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const path = (req.url || '').split('?')[0];
+        if (path !== '/' && !path.includes('.') && existsSync(resolve(root, `.${path}.html`))) {
+          req.url = `${path}.html`;
+        }
+        next();
+      });
+    },
+  };
+}
 
 export default defineConfig({
+  plugins: [cleanUrlsDev()],
   build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        about: resolve(__dirname, 'about.html'),
-        privacy: resolve(__dirname, 'privacy-policy.html'),
-        terms: resolve(__dirname, 'terms.html'),
-        contact: resolve(__dirname, 'contact.html'),
-        security: resolve(__dirname, 'security.html'),
-        howToUse: resolve(__dirname, 'how-to-use.html'),
-        // Aur agar aapke tools ke alag HTML pages banane hain, toh unhe yahan jod sakte hain
-      },
-    },
+    rollupOptions: { input },
   },
 });
