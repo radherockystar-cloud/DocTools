@@ -1,52 +1,17 @@
 import { createDropzone } from '../components/Dropzone.js';
 import { formatBytes, readFileAsDataURL } from '../utils/fileHelpers.js';
 import { downloadFile } from '../utils/download.js';
+import { escapeHtml, loadImage } from '../utils/dom.js';
 
-export function renderImageConvert(container, onBack) {
+export function renderImageConvert(container) {
+  // The page title, intro and article live in the static HTML page (content/image-convert.html).
+  // This file only draws the tool itself.
   container.innerHTML = `
-    <div class="max-w-3xl mx-auto px-4 py-8 w-full">
-      <button id="btn-back" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 mb-6 transition-colors dark:text-slate-400">
-        ← Back to All Tools
-      </button>
-
-      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm dark:bg-slate-900 dark:border-slate-800">
-        <div class="mb-6">
-          <span class="text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md dark:bg-purple-950/40">Smart Format Engine</span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 dark:text-white">Convert Image Format & Format Studio</h1>
-          <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Convert between JPG, PNG, and WebP image formats instantly inside your browser with an optimal balance of HD sharpness and small file size.</p>
-        </div>
-
-        <div id="dropzone-area"></div>
-        <div id="action-area" class="hidden mt-6 space-y-6"></div>
-      </div>
-
-      <!-- Extended SEO Article Section (700+ Words for AdSense Compliance) -->
-      <article class="mt-12 mb-8 space-y-6 text-slate-700 dark:text-slate-300">
-        <div>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-purple-600 dark:text-purple-400 bg-purple-100/60 dark:bg-purple-950/60 px-3 py-1 rounded-md inline-block mb-3">Complete Image Format Documentation & Comparison Guide</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">JPG vs PNG vs WEBP: Which Image File Format Should You Choose for Government Exams and Web Uploads?</h2>
-        </div>
-
-        <div class="space-y-5 text-base leading-relaxed font-medium">
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Choosing the correct image file format matters far more than most digital users and job applicants realize. Selecting an incompatible format or failing to meet strict portal specifications can lead to automated upload rejections on government recruitment boards, university admission portals, and banking application systems. Understanding the structural differences between standard image formats like JPEG, PNG, and WEBP ensures your documents are accepted immediately without formatting errors.</p>
-
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">The Role of JPEG (JPG) in Official Government and Exam Forms</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">JPEG is universally recognized as the absolute safest and most compatible format for passport-size photographs, signature crops, and scanned certificates. Almost every legacy and modern government application portal — including SSC, UPSC, IBPS, NTA, and railway boards — explicitly mandates JPEG or JPG extensions. JPEG utilizes lossy compression algorithms to discard invisible color details, allowing file sizes to shrink significantly while preserving clear visual features necessary for identity verification.</p>
-
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">When to Use PNG: Lossless Quality and Transparent Backgrounds</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Unlike JPEG, the Portable Network Graphics (PNG) format employs lossless compression, meaning no pixel data or visual clarity is ever discarded during encoding. This makes PNG the superior choice for digital signatures, company logos, graphical watermarks, and high-resolution interface screenshots containing sharp text and fine linework. However, because PNG files retain all raw image data, their file sizes are considerably larger, which can occasionally trigger upload warnings on portals with tight KB restrictions.</p>
-
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">WEBP: The Modern Web-Optimized Standard</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Developed by Google, WEBP represents the modern middle ground of image compression technology. It consistently achieves substantially smaller file sizes than both JPEG and PNG while maintaining equivalent or superior visual sharpness. While WEBP is widely used across modern web browsers and content management platforms for fast loading speeds, applicants must exercise caution when submitting forms to older government websites that may not yet support the format.</p>
-
-          <h3 class="text-xl font-black text-slate-900 dark:text-white pt-3">Absolute Security Through Client-Side Conversion</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Converting personal photos, identity cards, and signature scans online typically raises serious security concerns regarding cloud storage and data leakage. FreeDocTools executes all image conversion operations completely inside your browser using sandboxed HTML5 Canvas APIs, ensuring your files never leave your device.</p>
-        </div>
-      </article>
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+      <div id="dropzone-area"></div>
+      <div id="action-area" class="hidden mt-6 space-y-6"></div>
     </div>
   `;
-
-  container.querySelector('#btn-back').addEventListener('click', onBack);
 
   const dropzoneArea = container.querySelector('#dropzone-area');
   const actionArea = container.querySelector('#action-area');
@@ -59,14 +24,18 @@ export function renderImageConvert(container, onBack) {
 
   let currentFile = null;
   let imgElement = null;
+  let lastPreviewUrl = null;
 
   async function handleFile(file) {
     currentFile = file;
     const previewUrl = await readFileAsDataURL(file);
 
-    imgElement = new Image();
-    imgElement.src = previewUrl;
-    await new Promise(r => imgElement.onload = r);
+    try {
+      imgElement = await loadImage(previewUrl);
+    } catch (err) {
+      alert(err.message);
+      return;
+    }
 
     const originalFormat = file.type ? file.type.split('/')[1].toUpperCase() : 'UNKNOWN';
 
@@ -75,7 +44,7 @@ export function renderImageConvert(container, onBack) {
       <div class="flex items-center gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 dark:bg-slate-800/60 dark:border-slate-800">
         <img src="${previewUrl}" class="w-16 h-16 object-cover rounded-xl border border-slate-300 shadow-sm dark:border-slate-700" />
         <div class="overflow-hidden">
-          <p class="font-semibold text-slate-800 text-sm truncate dark:text-slate-200">${file.name}</p>
+          <p class="font-semibold text-slate-800 text-sm truncate dark:text-slate-200">${escapeHtml(file.name)}</p>
           <div class="flex items-center gap-2 mt-1">
             <span class="text-xs font-bold bg-slate-200 text-slate-800 px-2 py-0.5 rounded-md dark:bg-slate-700 dark:text-slate-200">${originalFormat}</span>
             <span class="text-xs text-slate-500 font-medium dark:text-slate-400">${imgElement.naturalWidth}×${imgElement.naturalHeight} px</span>
@@ -161,11 +130,21 @@ export function renderImageConvert(container, onBack) {
       if (selectedFormat === 'image/png') quality = undefined;
 
       canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('The image could not be converted. Try a smaller image.');
+          btnConvert.disabled = false;
+          btnConvert.innerHTML = '⚡ Convert Format Now';
+          return;
+        }
         const extMap = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
-        const targetExt = extMap[selectedFormat] || 'jpg';
+        // Some browsers cannot create WEBP and silently return PNG, so trust the real type of the result.
+        const targetExt = extMap[blob.type] || extMap[selectedFormat] || 'jpg';
+        const formatMismatch = Boolean(blob.type) && blob.type !== selectedFormat;
         const originalBaseName = currentFile.name.substring(0, currentFile.name.lastIndexOf('.')) || currentFile.name;
         const newFileName = `${originalBaseName}_converted.${targetExt}`;
+        if (lastPreviewUrl) URL.revokeObjectURL(lastPreviewUrl);
         const previewConvertedUrl = URL.createObjectURL(blob);
+        lastPreviewUrl = previewConvertedUrl;
 
         convertResult.classList.remove('hidden');
         convertResult.innerHTML = `
@@ -178,6 +157,8 @@ export function renderImageConvert(container, onBack) {
             <div class="flex justify-center bg-white p-2 rounded-xl border border-purple-100 max-h-64 overflow-hidden dark:bg-slate-900">
               <img src="${previewConvertedUrl}" class="max-h-60 object-contain rounded-lg" />
             </div>
+
+            ${formatMismatch ? `<p class="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">Your browser cannot create the format you chose, so it saved ${targetExt.toUpperCase()} instead.</p>` : ''}
 
             <div class="grid grid-cols-2 gap-3 text-xs bg-white p-3 rounded-xl border border-purple-100 dark:bg-slate-900">
               <div>

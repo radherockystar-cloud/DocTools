@@ -7,11 +7,14 @@
   "redirects": [
     { "source": "/tool-bg-remover", "destination": "/bg-remover", "permanent": true },
     { "source": "/tool-image-compress", "destination": "/image-compress", "permanent": true },
+    { "source": "/tool-image-resize", "destination": "/image-resize", "permanent": true },
+    { "source": "/tool-image-convert", "destination": "/image-convert", "permanent": true },
+    { "source": "/tool-pdf-compress", "destination": "/pdf-compress", "permanent": true },
+    { "source": "/tool-pdf-merge", "destination": "/pdf-merge", "permanent": true },
+    { "source": "/tool-images-to-pdf", "destination": "/images-to-pdf", "permanent": true },
+    { "source": "/tool-pdf-splitter", "destination": "/pdf-splitter", "permanent": true },
     { "source": "/tool-text-extractor", "destination": "/text-extractor", "permanent": true },
     { "source": "/tool-govt-exam-hub", "destination": "/", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
